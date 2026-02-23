@@ -8,10 +8,10 @@
     <!-- KaTeX CSS （数学公式样式） -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
     
-    <!-- Prism.js 代码高亮 CSS （选择一个你喜欢的主题，这里用默认的） -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css" />
-    <!-- 如果你想用其他主题，可以换为 prism.css、prism-okaidia.css 等 -->
-
+    <!-- 代码高亮样式（GitHub 风格，随主题自动适应） -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
+    
     <style>
         /* ===== 全局CSS变量 ===== */
         :root {
@@ -30,7 +30,7 @@
             --footer-color: #3a688b;
             --link-color: #1a6b8a;
             --link-hover: #0d4b6e;
-            --code-bg: rgba(0, 0, 0, 0.05);
+            --code-bg: #f6f8fa;        /* 浅色代码背景 */
             --math-color: inherit;
         }
 
@@ -50,7 +50,7 @@
             --footer-color: #6f92b9;
             --link-color: #8bb9ff;
             --link-hover: #aaccff;
-            --code-bg: #1e2a3a;
+            --code-bg: #1e2a3a;        /* 深色代码背景 */
         }
 
         /* ===== 基础样式 ===== */
@@ -109,7 +109,9 @@
             transform: scale(1.1);
         }
 
-        .icon-light, .icon-dark { display: inline-block; }
+        .icon-light, .icon-dark {
+            display: inline-block;
+        }
         body[data-theme="light"] .icon-dark { display: none; }
         body[data-theme="dark"] .icon-light { display: none; }
 
@@ -174,29 +176,45 @@
             border-bottom-color: currentColor;
         }
 
-        /* ===== 代码块样式（配合 Prism.js） ===== */
-        pre[class*="language-"] {
+        /* ===== 代码块样式 ===== */
+        pre, code {
+            font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
             background: var(--code-bg);
-            border-radius: 8px;
-            padding: 1rem;
-            margin: 1.5rem 0;
-            overflow-x: auto;
-            font-size: 0.95rem;
-            border: 1px solid var(--title-border);
+            border-radius: 6px;
         }
-        code[class*="language-"] {
-            text-shadow: none;
-            color: var(--text-color);
-        }
-        :not(pre) > code {
-            background: var(--code-bg);
+        code {
             padding: 0.2em 0.4em;
-            border-radius: 4px;
-            font-size: 0.9em;
-            color: var(--text-color);
+            font-size: 0.95em;
+        }
+        pre {
+            padding: 1rem;
+            overflow-x: auto;
+            line-height: 1.45;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            font-size: inherit;
+        }
+        /* 确保代码高亮颜色正确 */
+        .highlight .k, .highlight .kt, .highlight .kr, .highlight .kd,
+        .highlight .nb, .highlight .bp, .highlight .nc, .highlight .no,
+        .highlight .nf, .highlight .fm, .highlight .na, .highlight .nl,
+        .highlight .nn, .highlight .nt, .highlight .nv, .highlight .vc,
+        .highlight .vg, .highlight .vi, .highlight .s, .highlight .sa,
+        .highlight .sb, .highlight .sc, .highlight .dl, .highlight .sd,
+        .highlight .s2, .highlight .se, .highlight .sh, .highlight .si,
+        .highlight .sx, .highlight .sr, .highlight .s1, .highlight .ss,
+        .highlight .m, .highlight .mb, .highlight .mf, .highlight .mh,
+        .highlight .mi, .highlight .mo, .highlight .o, .highlight .ow,
+        .highlight .p, .highlight .c, .highlight .cm, .highlight .cp,
+        .highlight .c1, .highlight .cs, .highlight .gd, .highlight .ge,
+        .highlight .gr, .highlight .gh, .highlight .gi, .highlight .go,
+        .highlight .gp, .highlight .gs, .highlight .gu, .highlight .gt {
+            color: inherit; /* 让高亮样式由外部 CSS 控制 */
         }
 
-        /* ===== 列表 ===== */
+        /* ===== 列表、引用、表格等（保持不变）===== */
         ul, ol {
             color: var(--text-color);
             margin: 1.2rem 0;
@@ -205,8 +223,6 @@
             font-size: 1.2rem;
         }
         li { margin: 0.4rem 0; }
-
-        /* ===== 引用 ===== */
         blockquote {
             margin: 1.5rem 0;
             padding: 0.8rem 1.5rem;
@@ -217,8 +233,6 @@
             border-radius: 0 12px 12px 0;
             font-size: 1.2rem;
         }
-
-        /* ===== 表格 ===== */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -242,18 +256,13 @@
             padding: 0.5rem 0;
         }
 
-        /* ===== 其他 ===== */
         hr {
             border: none;
             border-top: 2px dashed var(--hr-color);
             margin: 2rem 0;
             transition: border-color 0.3s ease;
         }
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 12px;
-        }
+        img { max-width: 100%; height: auto; border-radius: 12px; }
 
         /* ===== 页脚 ===== */
         .footer {
@@ -284,19 +293,13 @@
     <!-- 页脚 -->
     <div class="footer">© 2026 Yang_YL · 由 GitHub Pages 驱动</div>
 
-    <!-- ========== 脚本加载区 ========== -->
-    <!-- KaTeX 核心库 -->
+    <!-- KaTeX JavaScript （必须先引入） -->
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
     
     <!-- KaTeX 自动渲染扩展 -->
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
 
-    <!-- Prism.js 核心库 -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-    <!-- Prism C++ 语言支持（根据需要添加更多语言） -->
-    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cpp.min.js"></script>
-
-    <!-- 主题切换脚本 -->
+    <!-- 主题切换JavaScript -->
     <script>
         (function() {
             const body = document.body;
@@ -312,9 +315,9 @@
         })();
     </script>
 
-    <!-- 手动调用 KaTeX 渲染，确保所有公式被渲染 -->
+    <!-- 手动触发 KaTeX 渲染（确保在页面加载后执行） -->
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
+        document.addEventListener('DOMContentLoaded', function() {
             if (typeof renderMathInElement === 'function') {
                 renderMathInElement(document.body, {
                     delimiters: [
