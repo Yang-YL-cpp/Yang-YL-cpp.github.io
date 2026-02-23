@@ -6,6 +6,7 @@ title: 博客
 <h1>Welcome to Yang_YL's blog!</h1>
 <p>我是 Yang_YL，这里是我的博客，我会在这里写一些我的想法，欢迎大家阅读。</p>
 <h3>目录：</h3>
+
 <style>
     /* 博客列表网格容器 */
     .blog-grid {
@@ -46,29 +47,21 @@ title: 博客
 
     .blog-grid a:hover {
         color: var(--link-hover);
-        border-bottom: none;  /* 去除下划线 */
+        border-bottom: none;
     }
 
     /* 响应式调整 */
     @media (max-width: 1000px) {
-        .blog-grid {
-            grid-template-columns: repeat(4, 1fr);
-        }
+        .blog-grid { grid-template-columns: repeat(4, 1fr); }
     }
     @media (max-width: 700px) {
-        .blog-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
+        .blog-grid { grid-template-columns: repeat(3, 1fr); }
     }
     @media (max-width: 500px) {
-        .blog-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
+        .blog-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 350px) {
-        .blog-grid {
-            grid-template-columns: 1fr;
-        }
+        .blog-grid { grid-template-columns: 1fr; }
     }
 
     /* 无文章时的提示 */
@@ -80,8 +73,13 @@ title: 博客
     }
 </style>
 
-{% comment %} 获取 blogs 文件夹下的所有页面（排除自身和权重为 -1 的） {% endcomment %}
-{% assign blog_posts = site.pages | where_exp: "item", "item.path contains 'blogs/' and item.name != 'index.html' and item.weight != -1" %}
+{% comment %} 手动筛选：遍历所有页面，收集 blogs 文件夹下的公开文章 {% endcomment %}
+{% assign blog_posts = "" | split: "" %}
+{% for page in site.pages %}
+    {% if page.path contains "blogs/" and page.name != "index.html" and page.weight != -1 %}
+        {% assign blog_posts = blog_posts | push: page %}
+    {% endif %}
+{% endfor %}
 
 {% comment %} 按 weight 降序，同 weight 按 title 升序排序 {% endcomment %}
 {% assign sorted_posts = blog_posts | sort: "title" %}
@@ -90,7 +88,6 @@ title: 博客
 {% if sorted_posts.size > 0 %}
     <ul class="blog-grid">
         {% for post in sorted_posts %}
-            {% comment %} 获取正确的 URL（移除可能的 .html 后缀） {% endcomment %}
             {% assign post_url = post.url | remove: '.html' | remove: '.htm' %}
             <li>
                 <a href="{{ post_url }}">{{ post.title }}</a>
@@ -100,4 +97,5 @@ title: 博客
 {% else %}
     <p class="no-posts">暂无公开文章</p>
 {% endif %}
+
 <hr>
