@@ -3,11 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Yang_YL's world</title>
-    <!-- 在这里可以添加 CSS 样式链接或内部样式 -->
+    <title>✨ Yang_YL's world ✨</title>
+    <style>
+        /* 全局样式：柔和背景、舒适间距 */
+        body {
+            margin: 0;
+            padding: 2rem 1rem;          /* 上下左右留白，让内容不贴边 */
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(145deg, #f9f5f0 0%, #f0ebe4 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;           /* 让主要内容区域居中（内部文字左对齐） */
+            box-sizing: border-box;
+        }
+
+        /* 主要内容卡片：增加层次感和留白 */
+        .content {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(8px);    /* 毛玻璃效果 */
+            padding: 2.5rem 2rem;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.2),
+                        0 4px 18px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        /* 一级标题：居中 + 优雅装饰 */
+        h1 {
+            text-align: center;            /* 居中 */
+            font-size: 3rem;
+            font-weight: 500;
+            color: #3a2c1b;
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+            letter-spacing: 1px;
+            position: relative;
+            display: inline-block;          /* 让装饰线只围绕文字 */
+            width: 100%;                    /* 保证居中 */
+        }
+
+        /* 标题下的装饰线（创意细节） */
+        h1::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: #c7a87b;
+            border-radius: 2px;
+            margin: 0.8rem auto 0;          /* 居中 */
+            opacity: 0.6;
+        }
+
+        /* 段落样式：清晰易读，行间距舒适 */
+        p {
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: #2e2a24;
+            margin: 1.2rem 0;
+        }
+
+        /* 一个小引言或署名区域（自由发挥） */
+        .intro {
+            font-style: italic;
+            border-left: 5px solid #b99e7c;
+            padding-left: 1.5rem;
+            color: #5f4e3a;
+            background: rgba(255, 250, 240, 0.5);
+            border-radius: 0 12px 12px 0;
+            margin: 2rem 0 1.5rem;
+        }
+
+        /* 极简页脚，让页面有结束感 */
+        footer {
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #8b7a66;
+            border-top: 1px dashed #d6c6b2;
+            padding-top: 1.8rem;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        footer a {
+            color: #7a5d42;
+            text-decoration: none;
+            border-bottom: 1px dotted;
+        }
+
+        footer a:hover {
+            color: #3a2c1b;
+        }
+
+        /* 响应式调整：小屏幕下字体略小 */
+        @media (max-width: 600px) {
+            body { padding: 1rem; }
+            .content { padding: 1.8rem 1.2rem; }
+            h1 { font-size: 2.4rem; }
+            p { font-size: 1rem; }
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to Yang_YL's world!</h1>
-    <!-- 后续可以在这里添加更多内容，比如段落、图片等 -->
+    <div class="content">
+        <h1>Welcome to Yang_YL's world!</h1>
+
+        <!-- 以下为创意填充内容，你可随意修改或删除 -->
+        <p class="intro">
+            ✦ 这里是一个刚刚诞生的数字角落，未来会有更多有趣的内容慢慢填满 ✦
+        </p>
+
+        <p>
+            你好，我是 <strong>Yang_YL</strong>。这个页面是用 GitHub Pages 搭建的，目前还很朴素，但已经迈出了第一步。
+            接下来我会在这里记录技术思考、生活随想，或者任何值得分享的东西。
+        </p>
+
+        <p>
+            如果你偶然来到这里，感谢你的驻足。世界很大，能在这里相遇也是一种缘分。
+        </p>
+
+        <!-- 简单的分隔装饰 -->
+        <div style="text-align:center; margin:2rem 0 1rem; opacity:0.5;">~~~</div>
+
+        <p style="font-size:1rem; color:#6b5f51;">
+            🌱 目前页面还在建设中，欢迎过段时间再来看看新变化。
+        </p>
+    </div>
+
+    <footer>
+        <p>© 2026 Yang_YL · 由 <a href="https://pages.github.com/" target="_blank">GitHub Pages</a> 驱动 · <a href="#">返回顶部</a></p>
+    </footer>
 </body>
 </html>
