@@ -8,6 +8,10 @@
     <!-- KaTeX CSS （数学公式样式） -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
     
+    <!-- Prism.js 代码高亮 CSS （选择一个你喜欢的主题，这里用默认的） -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.css" />
+    <!-- 如果你想用其他主题，可以换为 prism.css、prism-okaidia.css 等 -->
+
     <style>
         /* ===== 全局CSS变量 ===== */
         :root {
@@ -27,7 +31,7 @@
             --link-color: #1a6b8a;
             --link-hover: #0d4b6e;
             --code-bg: rgba(0, 0, 0, 0.05);
-            --math-color: inherit;  /* 数学公式颜色继承文字颜色 */
+            --math-color: inherit;
         }
 
         /* 深蓝主题 */
@@ -105,19 +109,9 @@
             transform: scale(1.1);
         }
 
-        /* 图标切换：根据主题显示/隐藏对应的图标 */
-        .icon-light,
-        .icon-dark {
-            display: inline-block;
-        }
-
-        body[data-theme="light"] .icon-dark {
-            display: none;
-        }
-
-        body[data-theme="dark"] .icon-light {
-            display: none;
-        }
+        .icon-light, .icon-dark { display: inline-block; }
+        body[data-theme="light"] .icon-dark { display: none; }
+        body[data-theme="dark"] .icon-light { display: none; }
 
         /* ===== 主卡片样式 ===== */
         .card {
@@ -167,13 +161,8 @@
             margin: 1.5rem 0;
             transition: color 0.3s ease;
         }
-        strong, b {
-            font-weight: 600;
-            color: var(--title-color);
-        }
-        em, i {
-            font-style: italic;
-        }
+        strong, b { font-weight: 600; color: var(--title-color); }
+        em, i { font-style: italic; }
         a {
             color: var(--link-color);
             text-decoration: none;
@@ -185,23 +174,26 @@
             border-bottom-color: currentColor;
         }
 
-        /* ===== 代码和预格式文本 ===== */
-        code, pre {
-            font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
+        /* ===== 代码块样式（配合 Prism.js） ===== */
+        pre[class*="language-"] {
             background: var(--code-bg);
-            border-radius: 6px;
-            padding: 0.2em 0.4em;
-            font-size: 0.95em;
-        }
-        pre {
+            border-radius: 8px;
             padding: 1rem;
+            margin: 1.5rem 0;
             overflow-x: auto;
-            line-height: 1.45;
+            font-size: 0.95rem;
+            border: 1px solid var(--title-border);
         }
-        pre code {
-            background: none;
-            padding: 0;
-            font-size: inherit;
+        code[class*="language-"] {
+            text-shadow: none;
+            color: var(--text-color);
+        }
+        :not(pre) > code {
+            background: var(--code-bg);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-size: 0.9em;
+            color: var(--text-color);
         }
 
         /* ===== 列表 ===== */
@@ -212,9 +204,7 @@
             line-height: 1.7;
             font-size: 1.2rem;
         }
-        li {
-            margin: 0.4rem 0;
-        }
+        li { margin: 0.4rem 0; }
 
         /* ===== 引用 ===== */
         blockquote {
@@ -241,16 +231,10 @@
             padding: 0.6rem 1rem;
             text-align: left;
         }
-        th {
-            background: var(--accent-bg);
-            font-weight: 600;
-        }
+        th { background: var(--accent-bg); font-weight: 600; }
 
         /* ===== KaTeX 数学公式适配 ===== */
-        .katex {
-            color: var(--text-color);  /* 公式颜色随主题 */
-            font-size: 1.1em;           /* 略大于正文，保持可读性 */
-        }
+        .katex { color: var(--text-color); font-size: 1.1em; }
         .katex-display {
             margin: 1.5rem 0;
             overflow-x: auto;
@@ -258,7 +242,7 @@
             padding: 0.5rem 0;
         }
 
-        /* ===== 其他常用元素 ===== */
+        /* ===== 其他 ===== */
         hr {
             border: none;
             border-top: 2px dashed var(--hr-color);
@@ -300,23 +284,19 @@
     <!-- 页脚 -->
     <div class="footer">© 2026 Yang_YL · 由 GitHub Pages 驱动</div>
 
-    <!-- KaTeX JavaScript （必须先引入） -->
+    <!-- ========== 脚本加载区 ========== -->
+    <!-- KaTeX 核心库 -->
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
     
-    <!-- KaTeX 自动渲染扩展 （自动扫描页面中的 $...$ 和 $$...$$ 并渲染） -->
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"
-        onload="renderMathInElement(document.body, {
-            delimiters: [
-                { left: '$$', right: '$$', display: true },   // 行间公式
-                { left: '$', right: '$', display: false },    // 行内公式
-                { left: '\\(', right: '\\)', display: false }, // LaTeX 风格行内
-                { left: '\\[', right: '\\]', display: true }   // LaTeX 风格行间
-            ],
-            throwOnError: false,        // 解析出错时不抛出异常，显示原码
-            errorColor: '#cc0000'       // 错误时显示红色
-        });"></script>
+    <!-- KaTeX 自动渲染扩展 -->
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
 
-    <!-- 主题切换JavaScript -->
+    <!-- Prism.js 核心库 -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <!-- Prism C++ 语言支持（根据需要添加更多语言） -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-cpp.min.js"></script>
+
+    <!-- 主题切换脚本 -->
     <script>
         (function() {
             const body = document.body;
@@ -330,6 +310,25 @@
                 localStorage.setItem('yang-yl-theme', newTheme);
             });
         })();
+    </script>
+
+    <!-- 手动调用 KaTeX 渲染，确保所有公式被渲染 -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (typeof renderMathInElement === 'function') {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        { left: '$$', right: '$$', display: true },
+                        { left: '$', right: '$', display: false },
+                        { left: '\\(', right: '\\)', display: false },
+                        { left: '\\[', right: '\\]', display: true }
+                    ],
+                    throwOnError: false
+                });
+            } else {
+                console.warn('KaTeX auto-render not loaded');
+            }
+        });
     </script>
 </body>
 </html>
