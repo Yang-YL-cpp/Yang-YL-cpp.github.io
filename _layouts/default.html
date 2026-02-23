@@ -8,10 +8,6 @@
     <!-- KaTeX CSS （数学公式样式） -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
     
-    <!-- 代码高亮样式（GitHub 风格，随主题自动适应） -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" media="(prefers-color-scheme: light)">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" media="(prefers-color-scheme: dark)">
-    
     <style>
         /* ===== 全局CSS变量 ===== */
         :root {
@@ -31,7 +27,7 @@
             --link-color: #1a6b8a;
             --link-hover: #0d4b6e;
             --code-bg: #f6f8fa;        /* 浅色代码背景 */
-            --math-color: inherit;
+            --code-text: #24292e;       /* 浅色代码文字默认色 */
         }
 
         /* 深蓝主题 */
@@ -51,6 +47,7 @@
             --link-color: #8bb9ff;
             --link-hover: #aaccff;
             --code-bg: #1e2a3a;        /* 深色代码背景 */
+            --code-text: #e1e4e8;       /* 深色代码文字默认色 */
         }
 
         /* ===== 基础样式 ===== */
@@ -185,6 +182,7 @@
         code {
             padding: 0.2em 0.4em;
             font-size: 0.95em;
+            color: var(--code-text);
         }
         pre {
             padding: 1rem;
@@ -195,26 +193,66 @@
             background: none;
             padding: 0;
             font-size: inherit;
-        }
-        /* 确保代码高亮颜色正确 */
-        .highlight .k, .highlight .kt, .highlight .kr, .highlight .kd,
-        .highlight .nb, .highlight .bp, .highlight .nc, .highlight .no,
-        .highlight .nf, .highlight .fm, .highlight .na, .highlight .nl,
-        .highlight .nn, .highlight .nt, .highlight .nv, .highlight .vc,
-        .highlight .vg, .highlight .vi, .highlight .s, .highlight .sa,
-        .highlight .sb, .highlight .sc, .highlight .dl, .highlight .sd,
-        .highlight .s2, .highlight .se, .highlight .sh, .highlight .si,
-        .highlight .sx, .highlight .sr, .highlight .s1, .highlight .ss,
-        .highlight .m, .highlight .mb, .highlight .mf, .highlight .mh,
-        .highlight .mi, .highlight .mo, .highlight .o, .highlight .ow,
-        .highlight .p, .highlight .c, .highlight .cm, .highlight .cp,
-        .highlight .c1, .highlight .cs, .highlight .gd, .highlight .ge,
-        .highlight .gr, .highlight .gh, .highlight .gi, .highlight .go,
-        .highlight .gp, .highlight .gs, .highlight .gu, .highlight .gt {
-            color: inherit; /* 让高亮样式由外部 CSS 控制 */
+            color: var(--code-text);
         }
 
-        /* ===== 列表、引用、表格等（保持不变）===== */
+        /* ----- 语法高亮（GitHub 风格，适配 Rouge 类名）----- */
+        .highlight .k, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt { color: #d73a49; } /* 关键字 */
+        .highlight .nf, .highlight .fm { color: #6f42c1; } /* 函数名 */
+        .highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi { color: #e36209; } /* 变量 */
+        .highlight .s, .highlight .sa, .highlight .sb, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .se, .highlight .sh, .highlight .si, .highlight .sx, .highlight .sr, .highlight .s1, .highlight .ss { color: #032f62; } /* 字符串 */
+        .highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .mo { color: #005cc5; } /* 数字 */
+        .highlight .o, .highlight .ow { color: #d73a49; } /* 操作符 */
+        .highlight .c, .highlight .cm, .highlight .c1, .highlight .cs { color: #6a737d; font-style: italic; } /* 注释 */
+        .highlight .err { color: #b31d28; background-color: #ffeef0; } /* 错误 */
+        .highlight .cp { color: #6f42c1; } /* 预处理 */
+        .highlight .gh, .highlight .gu { color: #005cc5; font-weight: bold; } /* 标题/UI */
+        .highlight .gd { color: #b31d28; background-color: #ffeef0; } /* 删除 */
+        .highlight .gi { color: #22863a; background-color: #f0fff4; } /* 插入 */
+        .highlight .w { color: #bbbbbb; } /* 空白 */
+
+        /* 深色模式下的高亮颜色调整（可选，使深色主题更和谐） */
+        body[data-theme="dark"] .highlight .k,
+        body[data-theme="dark"] .highlight .kd,
+        body[data-theme="dark"] .highlight .kn,
+        body[data-theme="dark"] .highlight .kp,
+        body[data-theme="dark"] .highlight .kr,
+        body[data-theme="dark"] .highlight .kt { color: #ff7b72; }
+        body[data-theme="dark"] .highlight .nf,
+        body[data-theme="dark"] .highlight .fm { color: #d2a8ff; }
+        body[data-theme="dark"] .highlight .nv,
+        body[data-theme="dark"] .highlight .vc,
+        body[data-theme="dark"] .highlight .vg,
+        body[data-theme="dark"] .highlight .vi { color: #ffa657; }
+        body[data-theme="dark"] .highlight .s,
+        body[data-theme="dark"] .highlight .sa,
+        body[data-theme="dark"] .highlight .sb,
+        body[data-theme="dark"] .highlight .sc,
+        body[data-theme="dark"] .highlight .dl,
+        body[data-theme="dark"] .highlight .sd,
+        body[data-theme="dark"] .highlight .s2,
+        body[data-theme="dark"] .highlight .se,
+        body[data-theme="dark"] .highlight .sh,
+        body[data-theme="dark"] .highlight .si,
+        body[data-theme="dark"] .highlight .sx,
+        body[data-theme="dark"] .highlight .sr,
+        body[data-theme="dark"] .highlight .s1,
+        body[data-theme="dark"] .highlight .ss { color: #79c0ff; }
+        body[data-theme="dark"] .highlight .m,
+        body[data-theme="dark"] .highlight .mb,
+        body[data-theme="dark"] .highlight .mf,
+        body[data-theme="dark"] .highlight .mh,
+        body[data-theme="dark"] .highlight .mi,
+        body[data-theme="dark"] .highlight .mo { color: #79c0ff; }
+        body[data-theme="dark"] .highlight .o,
+        body[data-theme="dark"] .highlight .ow { color: #ff7b72; }
+        body[data-theme="dark"] .highlight .c,
+        body[data-theme="dark"] .highlight .cm,
+        body[data-theme="dark"] .highlight .c1,
+        body[data-theme="dark"] .highlight .cs { color: #8b949e; }
+        body[data-theme="dark"] .highlight .err { color: #f85149; background-color: #290a0c; }
+
+        /* ===== 列表、引用、表格等 ===== */
         ul, ol {
             color: var(--text-color);
             margin: 1.2rem 0;
@@ -315,23 +353,31 @@
         })();
     </script>
 
-    <!-- 手动触发 KaTeX 渲染（确保在页面加载后执行） -->
+    <!-- 强制渲染数学公式（确保在页面完全加载后执行） -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof renderMathInElement === 'function') {
-                renderMathInElement(document.body, {
-                    delimiters: [
-                        { left: '$$', right: '$$', display: true },
-                        { left: '$', right: '$', display: false },
-                        { left: '\\(', right: '\\)', display: false },
-                        { left: '\\[', right: '\\]', display: true }
-                    ],
-                    throwOnError: false
-                });
-            } else {
-                console.warn('KaTeX auto-render not loaded');
+        (function() {
+            function renderMath() {
+                if (typeof renderMathInElement === 'function') {
+                    renderMathInElement(document.body, {
+                        delimiters: [
+                            { left: '$$', right: '$$', display: true },
+                            { left: '$', right: '$', display: false },
+                            { left: '\\(', right: '\\)', display: false },
+                            { left: '\\[', right: '\\]', display: true }
+                        ],
+                        throwOnError: false
+                    });
+                } else {
+                    setTimeout(renderMath, 200); // 如果还没加载好，稍后重试
+                }
             }
-        });
+            // 在 DOM 加载完成后尝试
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', renderMath);
+            } else {
+                renderMath();
+            }
+        })();
     </script>
 </body>
 </html>
