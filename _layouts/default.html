@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if page.title %}{{ page.title }} · {% endif %}Yang_YL's world</title>
+    <style>
+        /* 将你当前 index.html 里的全部 CSS 原封不动复制到这里 */
+        /* ... 你的完整 CSS ... */
+    </style>
+</head>
+<body data-theme="light">
+    <!-- 右上角图标切换按钮（保持不变） -->
+    <div class="icon-theme-wrapper">
+        <button id="icon-theme-toggle" class="icon-theme-btn" aria-label="切换主题">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
+    </div>
+
+    <!-- 主内容卡片：这里使用 content 占位符，每个页面的独特内容会插入到这里 -->
+    <div class="card">
+        {{ content }}
+    </div>
+
+    <!-- 页脚（保持不变） -->
+    <div class="footer">© 2026 Yang_YL · 由 GitHub Pages 驱动</div>
+
+    <!-- 主题切换 JavaScript（保持不变） -->
+    <script>
+        (function() {
+            const body = document.body;
+            const toggleBtn = document.getElementById('icon-theme-toggle');
+            const savedTheme = localStorage.getItem('yang-yl-theme') || 'light';
+            body.setAttribute('data-theme', savedTheme);
+            toggleBtn.addEventListener('click', () => {
+                const currentTheme = body.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('yang-yl-theme', newTheme);
+            });
+        })();
+    </script>
+</body>
+</html>
