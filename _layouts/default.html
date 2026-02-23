@@ -129,7 +129,7 @@
             margin-bottom: 2rem;
         }
 
-        /* ===== 标题系列（h1-h6）===== */
+        /* ===== 标题系列（h1-h6） 字体大小层级递减 ===== */
         h1, h2, h3, h4, h5, h6 {
             font-weight: 400;
             color: var(--title-color);
@@ -140,24 +140,35 @@
         }
         h1 {
             text-align: center;
-            font-size: 2.8rem;
+            font-size: 2.8rem;   /* ~44.8px */
             border-bottom: 2px solid var(--title-border);
             padding-bottom: 1rem;
             margin-top: 0;
         }
         h2 {
-            font-size: 2.2rem;
+            font-size: 2.2rem;   /* ~35.2px */
             border-left: 5px solid var(--title-border);
             padding-left: 1rem;
         }
-        h3 { font-size: 1.8rem; }
-        h4 { font-size: 1.5rem; }
-        h5 { font-size: 1.2rem; font-weight: 500; }
-        h6 { font-size: 1rem; font-weight: 500; color: var(--footer-color); }
+        h3 {
+            font-size: 1.8rem;   /* ~28.8px */
+        }
+        h4 {
+            font-size: 1.5rem;   /* ~24px */
+        }
+        h5 {
+            font-size: 1.2rem;   /* ~19.2px */
+            font-weight: 500;
+        }
+        h6 {
+            font-size: 1rem;     /* ~16px */
+            font-weight: 500;
+            color: var(--footer-color);
+        }
 
         /* ===== 段落和内联文本 ===== */
         p {
-            font-size: 1.2rem;
+            font-size: 1.2rem;   /* ~19.2px */
             line-height: 1.7;
             color: var(--text-color);
             margin: 1.5rem 0;
@@ -174,7 +185,7 @@
             color: var(--link-color);
             text-decoration: none;
             border-bottom: 1px dotted transparent;
-            transition: color 0.2s ease, border-color 0.2s ease;
+            transition: color 0.2s ease, border-bottom-color 0.2s ease;
         }
         a:hover {
             color: var(--link-hover);
@@ -187,7 +198,7 @@
             background: var(--code-bg);
             border-radius: 6px;
             padding: 0.2em 0.4em;
-            font-size: 0.95em;
+            font-size: 0.95em;  /* 相对于父元素稍小 */
         }
         pre {
             padding: 1rem;
@@ -197,6 +208,7 @@
         pre code {
             background: none;
             padding: 0;
+            font-size: inherit;
         }
 
         /* ===== 列表 ===== */
@@ -205,6 +217,7 @@
             margin: 1.2rem 0;
             padding-left: 2rem;
             line-height: 1.7;
+            font-size: 1.2rem;
         }
         li {
             margin: 0.4rem 0;
@@ -219,6 +232,7 @@
             color: var(--text-color);
             font-style: italic;
             border-radius: 0 12px 12px 0;
+            font-size: 1.2rem;
         }
 
         /* ===== 表格 ===== */
@@ -227,6 +241,7 @@
             border-collapse: collapse;
             margin: 1.5rem 0;
             color: var(--text-color);
+            font-size: 1.2rem;
         }
         th, td {
             border: 1px solid var(--title-border);
@@ -238,12 +253,11 @@
             font-weight: 600;
         }
 
-        /* ===== LaTeX 数学公式支持（使用 KaTeX 默认字体）===== */
+        /* ===== LaTeX 数学公式支持 ===== */
         .katex, .math {
             font-family: var(--math-font);
             color: var(--text-color);
         }
-        /* 如果你计划使用 MathJax，可以类似调整 */
         .MathJax {
             color: var(--text-color) !important;
         }
@@ -272,7 +286,7 @@
             margin-top: 0;
         }
     </style>
-    <!-- 如果你打算使用 KaTeX 渲染 LaTeX，可以取消下面的注释 -->
+    <!-- 若需 KaTeX 渲染，取消下行注释并引入 JS -->
     <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css"> -->
 </head>
 <body data-theme="light">
@@ -307,6 +321,6 @@
             });
         })();
     </script>
-    <!-- 如果你需要 KaTeX 支持，在这里引入 JS 并初始化 -->
+    <!-- 若需 KaTeX，在此处引入并初始化 -->
 </body>
 </html>
