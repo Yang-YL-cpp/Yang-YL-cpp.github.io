@@ -46,9 +46,9 @@
             font-family: 'Segoe UI', Roboto, system-ui, sans-serif;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;      /* 垂直排列子元素 */
-            align-items: center;         /* 水平居中 */
-            justify-content: center;     /* 垂直居中整体内容 */
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             box-sizing: border-box;
             transition: background 0.3s ease;
             position: relative;
@@ -110,8 +110,8 @@
 
         /* ===== 主卡片样式 ===== */
         .card {
-            max-width: 700px;
-            width: 100%;
+            width: 80%;                 /* 占视口宽度的80% */
+            max-width: 1200px;          /* 但最大不超过1200px，防止过宽 */
             background: var(--card-bg);
             backdrop-filter: blur(var(--card-blur));
             padding: 2.8rem 2.5rem;
@@ -119,7 +119,7 @@
             box-shadow: var(--card-shadow);
             border: 1px solid rgba(255, 255, 255, 0.7);
             transition: background 0.3s ease, box-shadow 0.3s ease;
-            margin-bottom: 2rem;  /* 与页脚之间增加间距 */
+            margin-bottom: 2rem;
         }
 
         h1 {
@@ -166,9 +166,9 @@
             color: var(--footer-color);
             font-size: 0.95rem;
             transition: color 0.3s ease;
-            max-width: 700px;
-            width: 100%;
-            margin-top: 0;        /* 由卡片的下边距控制即可 */
+            width: 80%;                 /* 与卡片宽度一致 */
+            max-width: 1200px;
+            margin-top: 0;
         }
     </style>
 </head>
@@ -181,12 +181,12 @@
         </button>
     </div>
 
-    <!-- 主内容卡片：每个页面的独特内容会插入到这里 -->
+    <!-- 主内容卡片 -->
     <div class="card">
         {{ content }}
     </div>
 
-    <!-- 页脚（所有页面共用） -->
+    <!-- 页脚 -->
     <div class="footer">© 2026 Yang_YL · 由 GitHub Pages 驱动</div>
 
     <!-- 主题切换JavaScript -->
