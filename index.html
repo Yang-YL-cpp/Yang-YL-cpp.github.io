@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Yang_YL's world · 双蓝切换</title>
     <style>
-        /* ===== 全局CSS变量（定义两种主题色） ===== */
+        /* ===== 全局CSS变量 ===== */
         :root {
             /* 浅蓝主题（默认） */
             --bg-gradient-start: #d4e6f1;
@@ -22,7 +22,7 @@
             --footer-color: #3a688b;
         }
 
-        /* 深蓝主题（当body有data-theme="dark"时应用） */
+        /* 深蓝主题 */
         body[data-theme="dark"] {
             --bg-gradient-start: #0b1a2e;
             --bg-gradient-end: #0b1a2e;
@@ -53,83 +53,61 @@
             position: relative;
         }
 
-        /* ===== 右上角切换滑块 ===== */
-        .theme-switch-wrapper {
+        /* ===== 右上角图标按钮 ===== */
+        .icon-theme-wrapper {
             position: fixed;
             top: 24px;
             right: 24px;
-            display: flex;
-            align-items: center;
             z-index: 1000;
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(8px);
-            padding: 6px 12px;
-            border-radius: 40px;
+            padding: 8px;
+            border-radius: 50%;
             border: 1px solid rgba(255, 255, 255, 0.3);
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
         }
 
-        .theme-switch-wrapper span {
-            margin: 0 8px;
-            font-size: 0.9rem;
-            color: var(--title-color);
-            font-weight: 500;
-        }
-
-        .theme-switch {
-            position: relative;
-            display: inline-block;
-            width: 56px;
-            height: 28px;
-            margin: 0 4px;
-        }
-
-        .theme-switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-
-        .slider {
-            position: absolute;
+        .icon-theme-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.8rem;
+            line-height: 1;
             cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(255, 255, 255, 0.6);
-            transition: 0.3s;
-            border-radius: 28px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--title-color);
+            transition: transform 0.2s ease;
         }
 
-        .slider:before {
-            position: absolute;
-            content: "🌞";
-            font-size: 16px;
-            line-height: 24px;
-            text-align: center;
-            height: 24px;
-            width: 24px;
-            left: 2px;
-            bottom: 1px;
-            background-color: white;
-            transition: 0.3s;
-            border-radius: 50%;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        .icon-theme-btn:hover {
+            transform: scale(1.1);
         }
 
-        /* 深色模式时滑块位置和图标变化 */
-        input:checked + .slider:before {
-            content: "🌙";
-            transform: translateX(28px);
+        /* 图标切换：根据主题显示/隐藏对应的图标 */
+        .icon-light,
+        .icon-dark {
+            display: inline-block;
         }
 
-        input:checked + .slider {
-            background-color: #2c4056;
+        body[data-theme="light"] .icon-dark {
+            display: none;
         }
 
-        /* ===== 主卡片样式（使用CSS变量） ===== */
+        body[data-theme="dark"] .icon-light {
+            display: none;
+        }
+
+        /* ===== 主卡片样式 ===== */
         .card {
             max-width: 700px;
             width: 100%;
@@ -189,21 +167,19 @@
         }
     </style>
 </head>
-<body data-theme="light"> <!-- 默认浅蓝 -->
-    <!-- 右上角切换滑块 -->
-    <div class="theme-switch-wrapper">
-        <span>🌊 浅蓝</span>
-        <label class="theme-switch">
-            <input type="checkbox" id="theme-toggle">
-            <span class="slider"></span>
-        </label>
-        <span>🌌 深蓝</span>
+<body data-theme="light">
+    <!-- 右上角图标切换按钮 -->
+    <div class="icon-theme-wrapper">
+        <button id="icon-theme-toggle" class="icon-theme-btn" aria-label="切换主题">
+            <span class="icon-light">☀️</span>
+            <span class="icon-dark">🌙</span>
+        </button>
     </div>
 
     <!-- 主内容卡片 -->
     <div class="card">
         <h1>Welcome to Yang_YL's world!</h1>
-        <p class="intro">✨ 点击右上角滑块，在浅蓝与深蓝之间切换 ✨</p>
+        <p class="intro">✨ 点击右上角图标，在浅蓝与深蓝之间切换 ✨</p>
         <p>我是 Yang_YL，这个小小的网站刚刚诞生。未来会慢慢记录一些代码、想法和日常。</p>
         <p>如果你偶然路过，很高兴与你相遇。</p>
         <hr>
@@ -213,28 +189,19 @@
     <!-- 主题切换JavaScript -->
     <script>
         (function() {
-            const toggle = document.getElementById('theme-toggle');
             const body = document.body;
+            const toggleBtn = document.getElementById('icon-theme-toggle');
 
-            // 读取用户之前保存的主题偏好（如果有）
-            const savedTheme = localStorage.getItem('yang-yl-theme');
-            if (savedTheme === 'dark') {
-                body.setAttribute('data-theme', 'dark');
-                toggle.checked = true; // 滑块状态同步
-            } else {
-                body.setAttribute('data-theme', 'light');
-                toggle.checked = false;
-            }
+            // 读取保存的主题，默认为浅蓝
+            const savedTheme = localStorage.getItem('yang-yl-theme') || 'light';
+            body.setAttribute('data-theme', savedTheme);
 
-            // 监听滑块变化
-            toggle.addEventListener('change', function(e) {
-                if (this.checked) {
-                    body.setAttribute('data-theme', 'dark');
-                    localStorage.setItem('yang-yl-theme', 'dark'); // 保存偏好
-                } else {
-                    body.setAttribute('data-theme', 'light');
-                    localStorage.setItem('yang-yl-theme', 'light');
-                }
+            // 点击切换主题
+            toggleBtn.addEventListener('click', () => {
+                const currentTheme = body.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                body.setAttribute('data-theme', newTheme);
+                localStorage.setItem('yang-yl-theme', newTheme);
             });
         })();
     </script>
