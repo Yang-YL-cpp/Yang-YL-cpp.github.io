@@ -524,10 +524,9 @@
         })();
     </script>
 
-    <!-- 生成目录的 JavaScript -->
+    <!-- 生成目录的 JavaScript（包含高亮自动滚动） -->
     <script>
         (function() {
-            // 存储当前的 IntersectionObserver 以便后续断开
             window.tocObserver = null;
 
             function generateToc() {
@@ -567,51 +566,74 @@
                 });
                 tocList.innerHTML = html;
 
-                // 生成目录后初始化高亮功能
                 initActiveToc();
             }
 
             function initActiveToc() {
-                // 断开之前的观察者
                 if (window.tocObserver) {
                     window.tocObserver.disconnect();
                     window.tocObserver = null;
                 }
 
+                const tocContainer = document.getElementById('toc-container');
                 const tocLinks = document.querySelectorAll('#toc-list a');
                 const headings = document.querySelectorAll('h1, h2, h3');
                 if (headings.length === 0 || tocLinks.length === 0) return;
 
-                // 辅助函数：移除所有 active 类
                 function removeActive() {
                     tocLinks.forEach(link => link.classList.remove('active'));
                 }
 
-                // 根据当前 hash 设置初始高亮
+                // 根据 hash 初始高亮
                 if (window.location.hash) {
                     const id = window.location.hash.slice(1);
                     const activeLink = document.querySelector(`#toc-list a[href="#${id}"]`);
                     if (activeLink) {
                         removeActive();
                         activeLink.classList.add('active');
+                        // 初始滚动到该目录项
+                        setTimeout(() => {
+                            activeLink.scrollIntoView({ block: 'nearest', behavior: 'auto' });
+                        }, 100);
                     }
                 }
 
-                // 使用 IntersectionObserver 监听标题可见性
+                let lastActiveLink = null;
+
+                // 使目录项可见（如果不在可视区内）
+                function ensureVisible(link) {
+                    if (!link) return;
+                    const containerRect = tocContainer.getBoundingClientRect();
+                    const linkRect = link.getBoundingClientRect();
+                    const linkTop = linkRect.top - containerRect.top;
+                    const linkBottom = linkRect.bottom - containerRect.top;
+                    const containerHeight = containerRect.height;
+
+                    if (linkTop < 0) {
+                        // 在上方不可见
+                        tocContainer.scrollTop += linkTop - 10; // 留点边距
+                    } else if (linkBottom > containerHeight) {
+                        // 在下方不可见
+                        tocContainer.scrollTop += linkBottom - containerHeight + 10;
+                    }
+                }
+
                 window.tocObserver = new IntersectionObserver((entries) => {
                     entries.forEach(entry => {
                         if (entry.isIntersecting) {
                             const id = entry.target.id;
                             const activeLink = document.querySelector(`#toc-list a[href="#${id}"]`);
-                            if (activeLink) {
+                            if (activeLink && activeLink !== lastActiveLink) {
                                 removeActive();
                                 activeLink.classList.add('active');
+                                lastActiveLink = activeLink;
+                                ensureVisible(activeLink);
                             }
                         }
                     });
                 }, {
-                    rootMargin: '-20px 0px -80px 0px', // 调整触发区域，使标题在距离顶部20px至底部80px之间时激活
-                    threshold: 0.5 // 至少50%可见时触发
+                    rootMargin: '-20px 0px -80px 0px',
+                    threshold: 0.5
                 });
 
                 headings.forEach(heading => window.tocObserver.observe(heading));
