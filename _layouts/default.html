@@ -8,6 +8,8 @@
     <!-- KaTeX CSS （数学公式样式） -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
     
+    <!-- 代码高亮 CSS 占位：先不加载，由 JS 动态加载 -->
+    
     <style>
         /* ===== 全局CSS变量 ===== */
         :root {
@@ -173,7 +175,7 @@
             border-bottom-color: currentColor;
         }
 
-        /* ===== 代码块样式 ===== */
+        /* ===== 代码块基础样式 ===== */
         pre, code {
             font-family: 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace;
             background: var(--code-bg);
@@ -195,62 +197,6 @@
             font-size: inherit;
             color: var(--code-text);
         }
-
-        /* ----- 语法高亮（GitHub 风格，适配 Rouge 类名）----- */
-        .highlight .k, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt { color: #d73a49; } /* 关键字 */
-        .highlight .nf, .highlight .fm { color: #6f42c1; } /* 函数名 */
-        .highlight .nv, .highlight .vc, .highlight .vg, .highlight .vi { color: #e36209; } /* 变量 */
-        .highlight .s, .highlight .sa, .highlight .sb, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .se, .highlight .sh, .highlight .si, .highlight .sx, .highlight .sr, .highlight .s1, .highlight .ss { color: #032f62; } /* 字符串 */
-        .highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .mo { color: #005cc5; } /* 数字 */
-        .highlight .o, .highlight .ow { color: #d73a49; } /* 操作符 */
-        .highlight .c, .highlight .cm, .highlight .c1, .highlight .cs { color: #6a737d; font-style: italic; } /* 注释 */
-        .highlight .err { color: #b31d28; background-color: #ffeef0; } /* 错误 */
-        .highlight .cp { color: #6f42c1; } /* 预处理 */
-        .highlight .gh, .highlight .gu { color: #005cc5; font-weight: bold; } /* 标题/UI */
-        .highlight .gd { color: #b31d28; background-color: #ffeef0; } /* 删除 */
-        .highlight .gi { color: #22863a; background-color: #f0fff4; } /* 插入 */
-        .highlight .w { color: #bbbbbb; } /* 空白 */
-
-        /* 深色模式下的高亮颜色调整（可选，使深色主题更和谐） */
-        body[data-theme="dark"] .highlight .k,
-        body[data-theme="dark"] .highlight .kd,
-        body[data-theme="dark"] .highlight .kn,
-        body[data-theme="dark"] .highlight .kp,
-        body[data-theme="dark"] .highlight .kr,
-        body[data-theme="dark"] .highlight .kt { color: #ff7b72; }
-        body[data-theme="dark"] .highlight .nf,
-        body[data-theme="dark"] .highlight .fm { color: #d2a8ff; }
-        body[data-theme="dark"] .highlight .nv,
-        body[data-theme="dark"] .highlight .vc,
-        body[data-theme="dark"] .highlight .vg,
-        body[data-theme="dark"] .highlight .vi { color: #ffa657; }
-        body[data-theme="dark"] .highlight .s,
-        body[data-theme="dark"] .highlight .sa,
-        body[data-theme="dark"] .highlight .sb,
-        body[data-theme="dark"] .highlight .sc,
-        body[data-theme="dark"] .highlight .dl,
-        body[data-theme="dark"] .highlight .sd,
-        body[data-theme="dark"] .highlight .s2,
-        body[data-theme="dark"] .highlight .se,
-        body[data-theme="dark"] .highlight .sh,
-        body[data-theme="dark"] .highlight .si,
-        body[data-theme="dark"] .highlight .sx,
-        body[data-theme="dark"] .highlight .sr,
-        body[data-theme="dark"] .highlight .s1,
-        body[data-theme="dark"] .highlight .ss { color: #79c0ff; }
-        body[data-theme="dark"] .highlight .m,
-        body[data-theme="dark"] .highlight .mb,
-        body[data-theme="dark"] .highlight .mf,
-        body[data-theme="dark"] .highlight .mh,
-        body[data-theme="dark"] .highlight .mi,
-        body[data-theme="dark"] .highlight .mo { color: #79c0ff; }
-        body[data-theme="dark"] .highlight .o,
-        body[data-theme="dark"] .highlight .ow { color: #ff7b72; }
-        body[data-theme="dark"] .highlight .c,
-        body[data-theme="dark"] .highlight .cm,
-        body[data-theme="dark"] .highlight .c1,
-        body[data-theme="dark"] .highlight .cs { color: #8b949e; }
-        body[data-theme="dark"] .highlight .err { color: #f85149; background-color: #290a0c; }
 
         /* ===== 列表、引用、表格等 ===== */
         ul, ol {
@@ -331,13 +277,11 @@
     <!-- 页脚 -->
     <div class="footer">© 2026 Yang_YL · 由 GitHub Pages 驱动</div>
 
-    <!-- KaTeX JavaScript （必须先引入） -->
+    <!-- KaTeX JavaScript -->
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
-    
-    <!-- KaTeX 自动渲染扩展 -->
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
 
-    <!-- 主题切换JavaScript -->
+    <!-- 主题切换JavaScript（基础） -->
     <script>
         (function() {
             const body = document.body;
@@ -349,11 +293,13 @@
                 const newTheme = currentTheme === 'light' ? 'dark' : 'light';
                 body.setAttribute('data-theme', newTheme);
                 localStorage.setItem('yang-yl-theme', newTheme);
+                // 高亮主题切换将在下面定义的函数中处理
+                updateHighlightTheme(newTheme);
             });
         })();
     </script>
 
-    <!-- 强制渲染数学公式（确保在页面完全加载后执行） -->
+    <!-- 强制渲染数学公式 -->
     <script>
         (function() {
             function renderMath() {
@@ -368,10 +314,9 @@
                         throwOnError: false
                     });
                 } else {
-                    setTimeout(renderMath, 200); // 如果还没加载好，稍后重试
+                    setTimeout(renderMath, 200);
                 }
             }
-            // 在 DOM 加载完成后尝试
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', renderMath);
             } else {
@@ -380,31 +325,53 @@
         })();
     </script>
 
+    <!-- highlight.js 核心库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <!-- 额外语言（如需要 C++） -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
+
+    <!-- 动态加载高亮主题 CSS 并应用高亮 -->
     <script>
-      (function() {
-        function doRender() {
-          if (typeof renderMathInElement === 'function') {
-            renderMathInElement(document.body, {
-              delimiters: [
-                { left: '$$', right: '$$', display: true },
-                { left: '$', right: '$', display: false },
-                { left: '\\(', right: '\\)', display: false },
-                { left: '\\[', right: '\\]', display: true }
-              ],
-              throwOnError: false
-            });
-            console.log('KaTeX rendered'); // 添加日志，看是否执行
-          } else {
-            console.warn('KaTeX not ready, retrying in 200ms');
-            setTimeout(doRender, 200);
-          }
-        }
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', doRender);
-        } else {
-          doRender();
-        }
-      })();
+        (function() {
+            // 定义两个主题的 CSS 链接
+            const lightThemeUrl = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
+            const darkThemeUrl = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
+
+            // 创建或获取 <link> 元素
+            let link = document.querySelector('#hljs-theme');
+            if (!link) {
+                link = document.createElement('link');
+                link.id = 'hljs-theme';
+                link.rel = 'stylesheet';
+                document.head.appendChild(link);
+            }
+
+            // 根据主题设置 href
+            function setHighlightTheme(theme) {
+                link.href = theme === 'dark' ? darkThemeUrl : lightThemeUrl;
+                // 高亮可能已经在页面上渲染过，需要重新应用
+                if (typeof hljs !== 'undefined') {
+                    hljs.highlightAll();
+                }
+            }
+
+            // 获取当前主题并应用
+            const currentTheme = document.body.getAttribute('data-theme') || 'light';
+            setHighlightTheme(currentTheme);
+
+            // 暴露更新函数，供主题切换按钮调用
+            window.updateHighlightTheme = setHighlightTheme;
+
+            // 如果 hljs 还没加载完成，等待后重试
+            if (typeof hljs === 'undefined') {
+                const checkHLJS = setInterval(function() {
+                    if (typeof hljs !== 'undefined') {
+                        clearInterval(checkHLJS);
+                        hljs.highlightAll();
+                    }
+                }, 100);
+            }
+        })();
     </script>
 </body>
 </html>
