@@ -6,21 +6,23 @@ title: 首页
 <h1>Welcome to Yang_YL's world!</h1>
 <p>我是 Yang_YL，这个小小的网站刚刚诞生。未来会慢慢记录一些代码、想法和日常。</p>
 <p>如果你偶然路过，很高兴与你相遇。</p>
-<h3>目录：</h3>
+
+<hr />
+
+<h2>📂 站点导航</h2>
 
 <style>
-    /* 博客列表网格容器 */
-    .blog-grid {
+    /* 复用博客列表的网格样式 */
+    .site-grid {
         display: grid;
-        grid-template-columns: repeat(5, 1fr);  /* 默认每行5个 */
+        grid-template-columns: repeat(5, 1fr);
         gap: 1.2rem;
         padding: 0;
         margin: 2rem 0;
         list-style: none;
     }
 
-    /* 网格项样式 */
-    .blog-grid li {
+    .site-grid li {
         background: var(--accent-bg);
         border-radius: 12px;
         transition: transform 0.2s ease, background 0.2s ease;
@@ -29,14 +31,13 @@ title: 首页
         text-align: center;
     }
 
-    .blog-grid li:hover {
+    .site-grid li:hover {
         transform: translateY(-3px);
         background: var(--card-bg);
         border-color: var(--link-color);
     }
 
-    /* 链接样式 */
-    .blog-grid a {
+    .site-grid a {
         display: block;
         padding: 1rem 0.8rem;
         color: var(--title-color);
@@ -46,35 +47,26 @@ title: 首页
         word-break: break-word;
     }
 
-    .blog-grid a:hover {
+    .site-grid a:hover {
         color: var(--link-hover);
-        border-bottom: none;  /* 去除下划线 */
+        border-bottom: none;
     }
 
     /* 响应式调整 */
     @media (max-width: 1000px) {
-        .blog-grid {
-            grid-template-columns: repeat(4, 1fr);
-        }
+        .site-grid { grid-template-columns: repeat(4, 1fr); }
     }
     @media (max-width: 700px) {
-        .blog-grid {
-            grid-template-columns: repeat(3, 1fr);
-        }
+        .site-grid { grid-template-columns: repeat(3, 1fr); }
     }
     @media (max-width: 500px) {
-        .blog-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
+        .site-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 350px) {
-        .blog-grid {
-            grid-template-columns: 1fr;
-        }
+        .site-grid { grid-template-columns: 1fr; }
     }
 
-    /* 无文章时的提示 */
-    .no-posts {
+    .no-sites {
         text-align: center;
         color: var(--footer-color);
         font-style: italic;
@@ -82,29 +74,46 @@ title: 首页
     }
 </style>
 
-{% comment %} 收集所有在 blogs/ 下的页面（包括子文件夹的 index.html），排除 blogs/index.html 自身 {% endcomment %}
-{% assign blog_posts = "" | split: "" %}
-{% for page in site.pages %}
-    {% if page.path contains "blogs/" and page.weight != -1 and page.path != "blogs/index.html" %}
-        {% assign blog_posts = blog_posts | push: page %}
+{% comment %}
+    收集所有要显示的站点入口：
+    1. 所有子文件夹中的 index.html（代表子站点）
+    2. 根目录下除了 index.html 和 README.md 之外的其他页面（如 about.md）
+    条件：weight != -1
+{% endcomment %}
+
+{% assign all_items = "" | split: "" %}
+
+{% comment %} 子文件夹的 index.html {% endcomment %}
+{% for p in site.pages %}
+    {% if p.path contains '/' and p.name == 'index.html' and p.path != 'index.html' and p.weight != -1 %}
+        {% assign all_items = all_items | push: p %}
     {% endif %}
 {% endfor %}
 
-{% comment %} 按 weight 降序，同 weight 按 title 升序排序 {% endcomment %}
-{% assign sorted_posts = blog_posts | sort: "title" %}
-{% assign sorted_posts = sorted_posts | sort: "weight" | reverse %}
+{% comment %} 根目录下的其他页面（排除 index.html 和 README.md） {% endcomment %}
+{% for p in site.pages %}
+    {% unless p.path contains '/' %}
+        {% if p.name != 'index.html' and p.name != 'README.md' and p.weight != -1 %}
+            {% assign all_items = all_items | push: p %}
+        {% endif %}
+    {% endunless %}
+{% endfor %}
 
-{% if sorted_posts.size > 0 %}
-    <ul class="blog-grid">
-        {% for post in sorted_posts %}
-            {% comment %} 获取正确的 URL（移除可能的 .html 后缀） {% endcomment %}
-            {% assign post_url = post.url | remove: '.html' | remove: '.htm' %}
+{% comment %} 按 weight 降序，同 weight 按 title 升序排序 {% endcomment %}
+{% assign sorted_items = all_items | sort: "title" %}
+{% assign sorted_items = sorted_items | sort: "weight" | reverse %}
+
+{% if sorted_items.size > 0 %}
+    <ul class="site-grid">
+        {% for item in sorted_items %}
+            {% comment %} 链接直接使用 Jekyll 生成的 URL（对于子文件夹 index 通常是 /folder/） {% endcomment %}
             <li>
-                <a href="{{ post_url }}">{{ post.title }}</a>
+                <a href="{{ item.url }}">{{ item.title }}</a>
             </li>
         {% endfor %}
     </ul>
 {% else %}
-    <p class="no-posts">暂无公开文章</p>
+    <p class="no-sites">暂无其他站点</p>
 {% endif %}
-<hr>
+
+<hr />
