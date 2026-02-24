@@ -26,10 +26,11 @@
             --footer-color: #3a688b;
             --link-color: #1a6b8a;
             --link-hover: #0d4b6e;
-            --code-bg: #f6f8fa;        /* 浅色代码背景 */
-            --code-text: #24292e;       /* 浅色代码文字默认色 */
-            --toc-bg: rgba(255, 255, 255, 0.6); /* 目录背景 */
+            --code-bg: #f6f8fa;
+            --code-text: #24292e;
+            --toc-bg: rgba(255, 255, 255, 0.6);
             --toc-border: rgba(90, 160, 210, 0.2);
+            --toc-hover-bg: rgba(90, 160, 210, 0.1);
         }
 
         /* 深蓝主题 */
@@ -48,10 +49,11 @@
             --footer-color: #6f92b9;
             --link-color: #8bb9ff;
             --link-hover: #aaccff;
-            --code-bg: #1e2a3a;        /* 深色代码背景 */
-            --code-text: #e1e4e8;       /* 深色代码文字默认色 */
-            --toc-bg: rgba(17, 37, 61, 0.8); /* 目录背景深色版 */
+            --code-bg: #1e2a3a;
+            --code-text: #e1e4e8;
+            --toc-bg: rgba(17, 37, 61, 0.8);
             --toc-border: #2f4b6e;
+            --toc-hover-bg: rgba(200, 220, 255, 0.1);
         }
 
         /* ===== 基础样式 ===== */
@@ -66,8 +68,15 @@
             align-items: center;
             justify-content: center;
             box-sizing: border-box;
-            transition: background 0.3s ease;
+            transition: background 0.3s ease, padding-left 0.3s ease;
             position: relative;
+        }
+
+        /* 大屏幕时左侧留出目录空间 */
+        @media (min-width: 1400px) {
+            body {
+                padding-left: 280px;
+            }
         }
 
         /* ===== 左侧目录样式 ===== */
@@ -75,7 +84,7 @@
             position: fixed;
             left: 20px;
             top: 80px;
-            width: 220px;
+            width: 240px;
             max-height: calc(100vh - 160px);
             overflow-y: auto;
             background: var(--toc-bg);
@@ -83,7 +92,7 @@
             border-radius: 16px;
             border: 1px solid var(--toc-border);
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            padding: 1rem 0.8rem;
+            padding: 1rem 0.5rem;
             font-size: 0.9rem;
             color: var(--text-color);
             transition: background 0.3s ease, border-color 0.3s ease;
@@ -92,12 +101,13 @@
 
         #toc-container h3 {
             margin-top: 0;
-            margin-bottom: 1rem;
-            font-size: 1.1rem;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
             font-weight: 500;
             color: var(--title-color);
             border-bottom: 1px solid var(--title-border);
             padding-bottom: 0.5rem;
+            padding-left: 0.5rem;
         }
 
         #toc-list {
@@ -107,32 +117,48 @@
         }
 
         #toc-list li {
-            margin: 0.3rem 0;
+            margin: 0.2rem 0;
             line-height: 1.4;
+            position: relative;
+        }
+
+        /* 层级缩进与视觉区分 */
+        .toc-h1 { 
+            margin-left: 0; 
+            font-weight: 600; 
+            border-left: 3px solid var(--title-color); 
+            padding-left: 0.5rem;
+        }
+        .toc-h2 { 
+            margin-left: 1rem; 
+            font-weight: 500; 
+            border-left: 2px solid var(--title-border); 
+            padding-left: 0.5rem;
+        }
+        .toc-h3 { 
+            margin-left: 2rem; 
+            font-weight: 400; 
+            border-left: 1px solid var(--title-border); 
+            padding-left: 0.5rem;
         }
 
         #toc-list a {
             color: var(--text-color);
             text-decoration: none;
             display: block;
-            padding: 0.2rem 0.5rem;
-            border-radius: 6px;
+            padding: 0.3rem 0.3rem;
+            border-radius: 4px;
             transition: background 0.2s ease, color 0.2s ease;
             word-break: break-word;
         }
 
         #toc-list a:hover {
-            background: var(--accent-bg);
+            background: var(--toc-hover-bg);
             color: var(--link-hover);
         }
 
-        /* 层级缩进 */
-        .toc-h1 { margin-left: 0; font-weight: 500; }
-        .toc-h2 { margin-left: 1rem; font-size: 0.9rem; }
-        .toc-h3 { margin-left: 2rem; font-size: 0.85rem; }
-
         /* 窄屏隐藏目录 */
-        @media (max-width: 1200px) {
+        @media (max-width: 1399px) {
             #toc-container {
                 display: none;
             }
@@ -225,7 +251,6 @@
         h5 { font-size: 1.2rem; font-weight: 500; }
         h6 { font-size: 1rem; font-weight: 500; color: var(--footer-color); }
 
-        /* 其他样式保持不变（段落、代码块、列表等） */
         /* ===== 段落和内联文本 ===== */
         p {
             font-size: 1.2rem;
@@ -371,7 +396,6 @@
                 const newTheme = currentTheme === 'light' ? 'dark' : 'light';
                 body.setAttribute('data-theme', newTheme);
                 localStorage.setItem('yang-yl-theme', newTheme);
-                // 高亮主题切换（如果有）
                 if (window.updateHighlightTheme) updateHighlightTheme(newTheme);
             });
         })();
@@ -403,7 +427,7 @@
         })();
     </script>
 
-    <!-- highlight.js 核心库（用于代码高亮，与之前相同） -->
+    <!-- highlight.js 核心库（代码高亮） -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
 
@@ -443,41 +467,40 @@
         })();
     </script>
 
-    <!-- 生成目录的 JavaScript -->
+    <!-- 生成目录的 JavaScript（改进版） -->
     <script>
         (function() {
             function generateToc() {
                 const tocList = document.getElementById('toc-list');
                 if (!tocList) return;
 
-                // 获取所有 h1, h2, h3
                 const headings = document.querySelectorAll('h1, h2, h3');
                 if (headings.length === 0) {
                     tocList.innerHTML = '<li style="color: var(--footer-color);">无标题</li>';
                     return;
                 }
 
-                // 为每个标题生成唯一 id（如果没有）
+                // 为每个标题生成唯一且有效的 id
                 headings.forEach((heading, index) => {
                     if (!heading.id) {
-                        // 生成简单的 slug：取文本内容，转小写，去除非字母数字，加短横线
                         let text = heading.textContent || '';
-                        let id = text
+                        // 生成基础 slug：保留中文字符、字母、数字，其他转为短横线
+                        let baseId = text
                             .toLowerCase()
-                            .replace(/[^\w\u4e00-\u9fa5]+/g, '-') // 允许中文
+                            .replace(/[^\w\u4e00-\u9fa5]+/g, '-')
                             .replace(/^-+|-+$/g, '');
-                        if (!id) id = `heading-${index}`;
-                        // 如果 id 已存在，加后缀
-                        let suffix = '';
-                        let count = 1;
-                        while (document.getElementById(id + suffix)) {
-                            suffix = `-${count++}`;
+                        // 如果最终为空，使用标题标签名+索引
+                        if (!baseId) baseId = heading.tagName.toLowerCase() + '-' + index;
+                        let id = baseId;
+                        let counter = 1;
+                        while (document.getElementById(id)) {
+                            id = baseId + '-' + counter++;
                         }
-                        heading.id = id + suffix;
+                        heading.id = id;
                     }
                 });
 
-                // 构建目录列表
+                // 构建目录 HTML
                 let html = '';
                 headings.forEach(heading => {
                     const tag = heading.tagName.toLowerCase(); // h1, h2, h3
@@ -486,26 +509,26 @@
                     const id = heading.id;
                     html += `<li class="${levelClass}"><a href="#${id}">${text}</a></li>`;
                 });
-
                 tocList.innerHTML = html;
 
-                // 点击平滑滚动
+                // 点击目录项平滑滚动
                 tocList.addEventListener('click', (e) => {
                     const target = e.target.closest('a');
-                    if (target && target.hash) {
+                    if (target && target.hash && target.hash.length > 1) {
                         e.preventDefault();
                         const id = target.hash.slice(1);
                         const element = document.getElementById(id);
                         if (element) {
-                            element.scrollIntoView({ behavior: 'smooth' });
-                            // 更新 URL 但不跳转
+                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                            // 更新 URL hash 但不刷新
                             history.pushState(null, null, target.hash);
+                        } else {
+                            console.warn('未找到元素: #' + id);
                         }
                     }
                 });
             }
 
-            // 在页面加载完成后生成目录
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', generateToc);
             } else {
