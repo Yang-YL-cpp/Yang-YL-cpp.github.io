@@ -1,10 +1,111 @@
----
-layout: default
+、；---
+layout: default‘’ 
 title: 首页
 ---
 
 <h1>Welcome to Yang_YL's world!</h1>
 <p>我是 Yang_YL，这个小小的网站刚刚诞生。未来会慢慢记录一些代码、想法和日常。</p>
 <p>如果你偶然路过，很高兴与你相遇。</p>
+<h3>目录：</h3>
+
+<style>
+    /* 博客列表网格容器 */
+    .blog-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);  /* 默认每行5个 */
+        gap: 1.2rem;
+        padding: 0;
+        margin: 2rem 0;
+        list-style: none;
+    }
+
+    /* 网格项样式 */
+    .blog-grid li {
+        background: var(--accent-bg);
+        border-radius: 12px;
+        transition: transform 0.2s ease, background 0.2s ease;
+        border: 1px solid var(--title-border);
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .blog-grid li:hover {
+        transform: translateY(-3px);
+        background: var(--card-bg);
+        border-color: var(--link-color);
+    }
+
+    /* 链接样式 */
+    .blog-grid a {
+        display: block;
+        padding: 1rem 0.8rem;
+        color: var(--title-color);
+        text-decoration: none;
+        font-size: 1rem;
+        line-height: 1.4;
+        word-break: break-word;
+    }
+
+    .blog-grid a:hover {
+        color: var(--link-hover);
+        border-bottom: none;  /* 去除下划线 */
+    }
+
+    /* 响应式调整 */
+    @media (max-width: 1000px) {
+        .blog-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+    @media (max-width: 700px) {
+        .blog-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+    @media (max-width: 500px) {
+        .blog-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    @media (max-width: 350px) {
+        .blog-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* 无文章时的提示 */
+    .no-posts {
+        text-align: center;
+        color: var(--footer-color);
+        font-style: italic;
+        margin: 3rem 0;
+    }
+</style>
+
+{% comment %} 收集所有在 blogs/ 下的页面（包括子文件夹的 index.html），排除 blogs/index.html 自身 {% endcomment %}
+{% assign blog_posts = "" | split: "" %}
+{% for page in site.pages %}
+    {% if page.path contains "blogs/" and page.weight != -1 and page.path != "blogs/index.html" %}
+        {% assign blog_posts = blog_posts | push: page %}
+    {% endif %}
+{% endfor %}
+
+{% comment %} 按 weight 降序，同 weight 按 title 升序排序 {% endcomment %}
+{% assign sorted_posts = blog_posts | sort: "title" %}
+{% assign sorted_posts = sorted_posts | sort: "weight" | reverse %}
+
+{% if sorted_posts.size > 0 %}
+    <ul class="blog-grid">
+        {% for post in sorted_posts %}
+            {% comment %} 获取正确的 URL（移除可能的 .html 后缀） {% endcomment %}
+            {% assign post_url = post.url | remove: '.html' | remove: '.htm' %}
+            <li>
+                <a href="{{ post_url }}">{{ post.title }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p class="no-posts">暂无公开文章</p>
+{% endif %}
 <hr>
-<!-- 注意：这里不再需要页脚和切换按钮，因为布局已经提供了 -->
+<hr>
