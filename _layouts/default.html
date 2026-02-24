@@ -8,8 +8,6 @@
     <!-- KaTeX CSS （数学公式样式） -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
     
-    <!-- 代码高亮 CSS 占位：先不加载，由 JS 动态加载 -->
-    
     <style>
         /* ===== 全局CSS变量 ===== */
         :root {
@@ -30,6 +28,8 @@
             --link-hover: #0d4b6e;
             --code-bg: #f6f8fa;        /* 浅色代码背景 */
             --code-text: #24292e;       /* 浅色代码文字默认色 */
+            --toc-bg: rgba(255, 255, 255, 0.6); /* 目录背景 */
+            --toc-border: rgba(90, 160, 210, 0.2);
         }
 
         /* 深蓝主题 */
@@ -50,6 +50,8 @@
             --link-hover: #aaccff;
             --code-bg: #1e2a3a;        /* 深色代码背景 */
             --code-text: #e1e4e8;       /* 深色代码文字默认色 */
+            --toc-bg: rgba(17, 37, 61, 0.8); /* 目录背景深色版 */
+            --toc-border: #2f4b6e;
         }
 
         /* ===== 基础样式 ===== */
@@ -66,6 +68,74 @@
             box-sizing: border-box;
             transition: background 0.3s ease;
             position: relative;
+        }
+
+        /* ===== 左侧目录样式 ===== */
+        #toc-container {
+            position: fixed;
+            left: 20px;
+            top: 80px;
+            width: 220px;
+            max-height: calc(100vh - 160px);
+            overflow-y: auto;
+            background: var(--toc-bg);
+            backdrop-filter: blur(8px);
+            border-radius: 16px;
+            border: 1px solid var(--toc-border);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0.8rem;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            transition: background 0.3s ease, border-color 0.3s ease;
+            z-index: 900;
+        }
+
+        #toc-container h3 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--title-color);
+            border-bottom: 1px solid var(--title-border);
+            padding-bottom: 0.5rem;
+        }
+
+        #toc-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        #toc-list li {
+            margin: 0.3rem 0;
+            line-height: 1.4;
+        }
+
+        #toc-list a {
+            color: var(--text-color);
+            text-decoration: none;
+            display: block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            transition: background 0.2s ease, color 0.2s ease;
+            word-break: break-word;
+        }
+
+        #toc-list a:hover {
+            background: var(--accent-bg);
+            color: var(--link-hover);
+        }
+
+        /* 层级缩进 */
+        .toc-h1 { margin-left: 0; font-weight: 500; }
+        .toc-h2 { margin-left: 1rem; font-size: 0.9rem; }
+        .toc-h3 { margin-left: 2rem; font-size: 0.85rem; }
+
+        /* 窄屏隐藏目录 */
+        @media (max-width: 1200px) {
+            #toc-container {
+                display: none;
+            }
         }
 
         /* ===== 右上角图标按钮 ===== */
@@ -136,6 +206,7 @@
             margin-bottom: 0.8em;
             line-height: 1.3;
             transition: color 0.3s ease;
+            scroll-margin-top: 70px; /* 为固定标题留出空间 */
         }
         h1 {
             text-align: center;
@@ -154,6 +225,7 @@
         h5 { font-size: 1.2rem; font-weight: 500; }
         h6 { font-size: 1rem; font-weight: 500; color: var(--footer-color); }
 
+        /* 其他样式保持不变（段落、代码块、列表等） */
         /* ===== 段落和内联文本 ===== */
         p {
             font-size: 1.2rem;
@@ -261,6 +333,12 @@
     </style>
 </head>
 <body data-theme="light">
+    <!-- 左侧目录容器 -->
+    <div id="toc-container">
+        <h3>📖 目录</h3>
+        <ul id="toc-list"></ul>
+    </div>
+
     <!-- 右上角图标切换按钮 -->
     <div class="icon-theme-wrapper">
         <button id="icon-theme-toggle" class="icon-theme-btn" aria-label="切换主题">
@@ -281,7 +359,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
 
-    <!-- 主题切换JavaScript（基础） -->
+    <!-- 主题切换基础脚本 -->
     <script>
         (function() {
             const body = document.body;
@@ -293,8 +371,8 @@
                 const newTheme = currentTheme === 'light' ? 'dark' : 'light';
                 body.setAttribute('data-theme', newTheme);
                 localStorage.setItem('yang-yl-theme', newTheme);
-                // 高亮主题切换将在下面定义的函数中处理
-                updateHighlightTheme(newTheme);
+                // 高亮主题切换（如果有）
+                if (window.updateHighlightTheme) updateHighlightTheme(newTheme);
             });
         })();
     </script>
@@ -325,19 +403,16 @@
         })();
     </script>
 
-    <!-- highlight.js 核心库 -->
+    <!-- highlight.js 核心库（用于代码高亮，与之前相同） -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <!-- 额外语言（如需要 C++） -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
 
-    <!-- 动态加载高亮主题 CSS 并应用高亮 -->
+    <!-- 动态加载高亮主题 CSS -->
     <script>
         (function() {
-            // 定义两个主题的 CSS 链接
             const lightThemeUrl = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css';
             const darkThemeUrl = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css';
 
-            // 创建或获取 <link> 元素
             let link = document.querySelector('#hljs-theme');
             if (!link) {
                 link = document.createElement('link');
@@ -346,23 +421,17 @@
                 document.head.appendChild(link);
             }
 
-            // 根据主题设置 href
             function setHighlightTheme(theme) {
                 link.href = theme === 'dark' ? darkThemeUrl : lightThemeUrl;
-                // 高亮可能已经在页面上渲染过，需要重新应用
                 if (typeof hljs !== 'undefined') {
                     hljs.highlightAll();
                 }
             }
 
-            // 获取当前主题并应用
             const currentTheme = document.body.getAttribute('data-theme') || 'light';
             setHighlightTheme(currentTheme);
-
-            // 暴露更新函数，供主题切换按钮调用
             window.updateHighlightTheme = setHighlightTheme;
 
-            // 如果 hljs 还没加载完成，等待后重试
             if (typeof hljs === 'undefined') {
                 const checkHLJS = setInterval(function() {
                     if (typeof hljs !== 'undefined') {
@@ -370,6 +439,77 @@
                         hljs.highlightAll();
                     }
                 }, 100);
+            }
+        })();
+    </script>
+
+    <!-- 生成目录的 JavaScript -->
+    <script>
+        (function() {
+            function generateToc() {
+                const tocList = document.getElementById('toc-list');
+                if (!tocList) return;
+
+                // 获取所有 h1, h2, h3
+                const headings = document.querySelectorAll('h1, h2, h3');
+                if (headings.length === 0) {
+                    tocList.innerHTML = '<li style="color: var(--footer-color);">无标题</li>';
+                    return;
+                }
+
+                // 为每个标题生成唯一 id（如果没有）
+                headings.forEach((heading, index) => {
+                    if (!heading.id) {
+                        // 生成简单的 slug：取文本内容，转小写，去除非字母数字，加短横线
+                        let text = heading.textContent || '';
+                        let id = text
+                            .toLowerCase()
+                            .replace(/[^\w\u4e00-\u9fa5]+/g, '-') // 允许中文
+                            .replace(/^-+|-+$/g, '');
+                        if (!id) id = `heading-${index}`;
+                        // 如果 id 已存在，加后缀
+                        let suffix = '';
+                        let count = 1;
+                        while (document.getElementById(id + suffix)) {
+                            suffix = `-${count++}`;
+                        }
+                        heading.id = id + suffix;
+                    }
+                });
+
+                // 构建目录列表
+                let html = '';
+                headings.forEach(heading => {
+                    const tag = heading.tagName.toLowerCase(); // h1, h2, h3
+                    const levelClass = `toc-${tag}`;
+                    const text = heading.textContent || '';
+                    const id = heading.id;
+                    html += `<li class="${levelClass}"><a href="#${id}">${text}</a></li>`;
+                });
+
+                tocList.innerHTML = html;
+
+                // 点击平滑滚动
+                tocList.addEventListener('click', (e) => {
+                    const target = e.target.closest('a');
+                    if (target && target.hash) {
+                        e.preventDefault();
+                        const id = target.hash.slice(1);
+                        const element = document.getElementById(id);
+                        if (element) {
+                            element.scrollIntoView({ behavior: 'smooth' });
+                            // 更新 URL 但不跳转
+                            history.pushState(null, null, target.hash);
+                        }
+                    }
+                });
+            }
+
+            // 在页面加载完成后生成目录
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', generateToc);
+            } else {
+                generateToc();
             }
         })();
     </script>
