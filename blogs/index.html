@@ -1,16 +1,16 @@
 ---
 layout: default
 title: 博客
-weight: 100
 ---
 
 <h1>Welcome to Yang_YL's blog!</h1>
 <p>我是 Yang_YL，这里是我的博客，我会在这里写一些我的想法，欢迎大家阅读。</p>
-<h3>目录：</h3>
+
+<h3>📚 文章列表</h3>
 
 <style>
-    /* 复用博客列表的网格样式 */
-    .site-grid {
+    /* 博客列表网格容器 */
+    .blog-grid {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
         gap: 1.2rem;
@@ -19,7 +19,7 @@ weight: 100
         list-style: none;
     }
 
-    .site-grid li {
+    .blog-grid li {
         background: var(--accent-bg);
         border-radius: 12px;
         transition: transform 0.2s ease, background 0.2s ease;
@@ -28,13 +28,13 @@ weight: 100
         text-align: center;
     }
 
-    .site-grid li:hover {
+    .blog-grid li:hover {
         transform: translateY(-3px);
         background: var(--card-bg);
         border-color: var(--link-color);
     }
 
-    .site-grid a {
+    .blog-grid a {
         display: block;
         padding: 1rem 0.8rem;
         color: var(--title-color);
@@ -44,26 +44,25 @@ weight: 100
         word-break: break-word;
     }
 
-    .site-grid a:hover {
+    .blog-grid a:hover {
         color: var(--link-hover);
         border-bottom: none;
     }
 
-    /* 响应式调整 */
     @media (max-width: 1000px) {
-        .site-grid { grid-template-columns: repeat(4, 1fr); }
+        .blog-grid { grid-template-columns: repeat(4, 1fr); }
     }
     @media (max-width: 700px) {
-        .site-grid { grid-template-columns: repeat(3, 1fr); }
+        .blog-grid { grid-template-columns: repeat(3, 1fr); }
     }
     @media (max-width: 500px) {
-        .site-grid { grid-template-columns: repeat(2, 1fr); }
+        .blog-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 350px) {
-        .site-grid { grid-template-columns: 1fr; }
+        .blog-grid { grid-template-columns: 1fr; }
     }
 
-    .no-sites {
+    .no-posts {
         text-align: center;
         color: var(--footer-color);
         font-style: italic;
@@ -71,46 +70,29 @@ weight: 100
     }
 </style>
 
-{% comment %}
-    收集所有要显示的站点入口：
-    1. 所有子文件夹中的 index.html（代表子站点）
-    2. 根目录下除了 index.html 和 README.md 之外的其他页面（如 about.md）
-    条件：weight != -1
-{% endcomment %}
-
-{% assign all_items = "" | split: "" %}
-
-{% comment %} 子文件夹的 index.html {% endcomment %}
-{% for p in site.pages %}
-    {% if p.path contains '/' and p.name == 'index.html' and p.path != 'index.html' and p.weight != -1 %}
-        {% assign all_items = all_items | push: p %}
+{% comment %} 获取 blogs 文件夹下的所有页面（排除自身和权重为 -1 的） {% endcomment %}
+{% assign blog_posts = "" | split: "" %}
+{% for page in site.pages %}
+    {% if page.path contains "blogs/" and page.name != "index.html" and page.weight != -1 %}
+        {% assign blog_posts = blog_posts | push: page %}
     {% endif %}
 {% endfor %}
 
-{% comment %} 根目录下的其他页面（排除 index.html 和 README.md） {% endcomment %}
-{% for p in site.pages %}
-    {% unless p.path contains '/' %}
-        {% if p.name != 'index.html' and p.name != 'README.md' and p.weight != -1 %}
-            {% assign all_items = all_items | push: p %}
-        {% endif %}
-    {% endunless %}
-{% endfor %}
-
 {% comment %} 按 weight 降序，同 weight 按 title 升序排序 {% endcomment %}
-{% assign sorted_items = all_items | sort: "title" %}
-{% assign sorted_items = sorted_items | sort: "weight" | reverse %}
+{% assign sorted_posts = blog_posts | sort: "title" %}
+{% assign sorted_posts = sorted_posts | sort: "weight" | reverse %}
 
-{% if sorted_items.size > 0 %}
-    <ul class="site-grid">
-        {% for item in sorted_items %}
-            {% comment %} 链接直接使用 Jekyll 生成的 URL（对于子文件夹 index 通常是 /folder/） {% endcomment %}
+{% if sorted_posts.size > 0 %}
+    <ul class="blog-grid">
+        {% for post in sorted_posts %}
+            {% assign post_url = post.url | remove: '.html' | remove: '.htm' %}
             <li>
-                <a href="{{ item.url }}">{{ item.title }}</a>
+                <a href="{{ post_url }}">{{ post.title }}</a>
             </li>
         {% endfor %}
     </ul>
 {% else %}
-    <p class="no-sites">暂无其他站点</p>
+    <p class="no-posts">暂无公开文章</p>
 {% endif %}
 
-<hr>
+<hr />
