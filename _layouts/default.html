@@ -11,7 +11,6 @@
     <style>
         /* ===== 全局CSS变量 ===== */
         :root {
-            /* 浅蓝主题（默认） */
             --bg-gradient-start: #d4e6f1;
             --bg-gradient-end: #b0d0e8;
             --card-bg: rgba(255, 255, 255, 0.75);
@@ -86,7 +85,9 @@
             top: 80px;
             width: 240px;
             max-height: calc(100vh - 160px);
-            overflow-y: auto;
+            overflow-y: auto;           /* 保留滚动 */
+            scrollbar-width: none;      /* Firefox 隐藏滚动条 */
+            -ms-overflow-style: none;   /* IE/Edge 隐藏滚动条 */
             background: var(--toc-bg);
             backdrop-filter: blur(8px);
             border-radius: 16px;
@@ -97,6 +98,9 @@
             color: var(--text-color);
             transition: background 0.3s ease, border-color 0.3s ease;
             z-index: 900;
+        }
+        #toc-container::-webkit-scrollbar {
+            display: none;              /* Chrome/Safari 隐藏滚动条 */
         }
 
         #toc-container h3 {
@@ -483,16 +487,13 @@
                     return;
                 }
 
-                // 为每个标题生成唯一且有效的 id
                 headings.forEach((heading, index) => {
                     if (!heading.id) {
                         let text = heading.textContent || '';
-                        // 生成基础 slug：保留中文字符、字母、数字，其他转为短横线
                         let baseId = text
                             .toLowerCase()
                             .replace(/[^\w\u4e00-\u9fa5]+/g, '-')
                             .replace(/^-+|-+$/g, '');
-                        // 如果最终为空，使用标签名+索引
                         if (!baseId) baseId = heading.tagName.toLowerCase() + '-' + index;
                         let id = baseId;
                         let counter = 1;
@@ -500,16 +501,15 @@
                             id = baseId + '-' + counter++;
                         }
                         heading.id = id;
-                        console.log(`Generated id for ${heading.tagName}: ${id}`); // 调试输出
+                        console.log(`Generated id for ${heading.tagName}: ${id}`);
                     } else {
                         console.log(`Existing id for ${heading.tagName}: ${heading.id}`);
                     }
                 });
 
-                // 构建目录 HTML
                 let html = '';
                 headings.forEach(heading => {
-                    const tag = heading.tagName.toLowerCase(); // h1, h2, h3
+                    const tag = heading.tagName.toLowerCase();
                     const levelClass = `toc-${tag}`;
                     const text = heading.textContent || '';
                     const id = heading.id;
@@ -517,13 +517,12 @@
                 });
                 tocList.innerHTML = html;
 
-                // 点击目录项平滑滚动
                 tocList.addEventListener('click', (e) => {
                     const target = e.target.closest('a');
                     if (target && target.hash && target.hash.length > 1) {
                         e.preventDefault();
                         const id = target.hash.slice(1);
-                        console.log(`Attempting to scroll to element with id: ${id}`); // 调试
+                        console.log(`Attempting to scroll to element with id: ${id}`);
                         const element = document.getElementById(id);
                         if (element) {
                             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
