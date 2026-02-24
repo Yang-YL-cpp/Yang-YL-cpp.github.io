@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% if page.title %}{{ page.title }} · {% endif %}Yang_YL's world</title>
     
-    <!-- KaTeX CSS （数学公式样式） -->
+    <!-- KaTeX CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
     
     <style>
@@ -122,24 +122,27 @@
             position: relative;
         }
 
-        /* 层级缩进与视觉区分 */
+        /* 层级缩进与字体大小 */
         .toc-h1 { 
             margin-left: 0; 
             font-weight: 600; 
             border-left: 3px solid var(--title-color); 
             padding-left: 0.5rem;
+            font-size: 1.1rem;
         }
         .toc-h2 { 
-            margin-left: 1rem; 
+            margin-left: 1.5rem; 
             font-weight: 500; 
             border-left: 2px solid var(--title-border); 
             padding-left: 0.5rem;
+            font-size: 1rem;
         }
         .toc-h3 { 
-            margin-left: 2rem; 
+            margin-left: 3rem; 
             font-weight: 400; 
             border-left: 1px solid var(--title-border); 
             padding-left: 0.5rem;
+            font-size: 0.95rem;
         }
 
         #toc-list a {
@@ -224,7 +227,7 @@
             margin-bottom: 2rem;
         }
 
-        /* ===== 标题系列 ===== */
+        /* ===== 标题系列（调小字号） ===== */
         h1, h2, h3, h4, h5, h6 {
             font-weight: 400;
             color: var(--title-color);
@@ -232,23 +235,23 @@
             margin-bottom: 0.8em;
             line-height: 1.3;
             transition: color 0.3s ease;
-            scroll-margin-top: 70px; /* 为固定标题留出空间 */
+            scroll-margin-top: 70px;
         }
         h1 {
             text-align: center;
-            font-size: 2.8rem;
+            font-size: 2.2rem;
             border-bottom: 2px solid var(--title-border);
             padding-bottom: 1rem;
             margin-top: 0;
         }
         h2 {
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             border-left: 5px solid var(--title-border);
             padding-left: 1rem;
         }
-        h3 { font-size: 1.8rem; }
-        h4 { font-size: 1.5rem; }
-        h5 { font-size: 1.2rem; font-weight: 500; }
+        h3 { font-size: 1.5rem; }
+        h4 { font-size: 1.3rem; }
+        h5 { font-size: 1.1rem; font-weight: 500; }
         h6 { font-size: 1rem; font-weight: 500; color: var(--footer-color); }
 
         /* ===== 段落和内联文本 ===== */
@@ -467,7 +470,7 @@
         })();
     </script>
 
-    <!-- 生成目录的 JavaScript（改进版） -->
+    <!-- 生成目录的 JavaScript（改进版，增加调试输出） -->
     <script>
         (function() {
             function generateToc() {
@@ -489,7 +492,7 @@
                             .toLowerCase()
                             .replace(/[^\w\u4e00-\u9fa5]+/g, '-')
                             .replace(/^-+|-+$/g, '');
-                        // 如果最终为空，使用标题标签名+索引
+                        // 如果最终为空，使用标签名+索引
                         if (!baseId) baseId = heading.tagName.toLowerCase() + '-' + index;
                         let id = baseId;
                         let counter = 1;
@@ -497,6 +500,9 @@
                             id = baseId + '-' + counter++;
                         }
                         heading.id = id;
+                        console.log(`Generated id for ${heading.tagName}: ${id}`); // 调试输出
+                    } else {
+                        console.log(`Existing id for ${heading.tagName}: ${heading.id}`);
                     }
                 });
 
@@ -517,10 +523,10 @@
                     if (target && target.hash && target.hash.length > 1) {
                         e.preventDefault();
                         const id = target.hash.slice(1);
+                        console.log(`Attempting to scroll to element with id: ${id}`); // 调试
                         const element = document.getElementById(id);
                         if (element) {
                             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            // 更新 URL hash 但不刷新
                             history.pushState(null, null, target.hash);
                         } else {
                             console.warn('未找到元素: #' + id);
