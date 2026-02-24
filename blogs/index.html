@@ -6,10 +6,9 @@ title: 博客
 <h1>Welcome to Yang_YL's blog!</h1>
 <p>我是 Yang_YL，这里是我的博客，我会在这里写一些我的想法，欢迎大家阅读。</p>
 
-<h3>📚 文章列表</h3>
+<h3>📚 子站点列表</h3>
 
 <style>
-    /* 博客列表网格容器（样式与之前完全相同） */
     .blog-grid {
         display: grid;
         grid-template-columns: repeat(5, 1fr);
@@ -70,43 +69,30 @@ title: 博客
     }
 </style>
 
-{% comment %}
-    收集所有要显示的内容：
-    1. 所有位于 blogs/ 文件夹下的页面（包括子文件夹的 index.html）
-    2. 排除当前文件本身（blogs/index.html）
-    3. 排除 weight == -1 的页面
-{% endcomment %}
-
-{% assign blog_items = "" | split: "" %}
-
+{% comment %} 收集 blogs/ 下所有子文件夹的 index.html（排除自身） {% endcomment %}
+{% assign sub_sites = "" | split: "" %}
 {% for page in site.pages %}
-    {% comment %} 检查是否在 blogs/ 路径下（包括子文件夹） {% endcomment %}
-    {% if page.path contains "blogs/" %}
-        {% comment %} 排除当前页面自身（blogs/index.html） {% endcomment %}
-        {% unless page.path == "blogs/index.html" %}
-            {% comment %} 排除 weight == -1 的页面 {% endcomment %}
-            {% if page.weight != -1 %}
-                {% assign blog_items = blog_items | push: page %}
-            {% endif %}
-        {% endunless %}
+    {% assign parts = page.path | split: '/' %}
+    {% comment %} 条件：路径以 blogs/ 开头，是 index.html，且深度为2（即 blogs/子文件夹/index.html） {% endcomment %}
+    {% if parts.size == 3 and parts[0] == 'blogs' and parts[2] == 'index.html' and page.weight != -1 %}
+        {% assign sub_sites = sub_sites | push: page %}
     {% endif %}
 {% endfor %}
 
 {% comment %} 按 weight 降序，同 weight 按 title 升序排序 {% endcomment %}
-{% assign sorted_items = blog_items | sort: "title" %}
+{% assign sorted_items = sub_sites | sort: "title" %}
 {% assign sorted_items = sorted_items | sort: "weight" | reverse %}
 
 {% if sorted_items.size > 0 %}
     <ul class="blog-grid">
         {% for item in sorted_items %}
-            {% comment %} 使用 item.url 自动生成正确链接（对于 index.html 会指向文件夹路径） {% endcomment %}
             <li>
                 <a href="{{ item.url }}">{{ item.title }}</a>
             </li>
         {% endfor %}
     </ul>
 {% else %}
-    <p class="no-posts">暂无公开文章或子站点</p>
+    <p class="no-posts">暂无子站点</p>
 {% endif %}
 
 <hr />
