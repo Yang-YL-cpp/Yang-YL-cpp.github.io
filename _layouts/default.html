@@ -9,8 +9,14 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" integrity="sha384-wcIxkf4k558AjM3Yz3BBFQUbk/zgIYC2R0QpeeYb+TwlBVMrlgLqwRjRtGZiK7ww" crossorigin="anonymous">
     
     <style>
+        /* 全局平滑滚动（原生锚点跳转动画） */
+        html {
+            scroll-behavior: smooth;
+        }
+
         /* ===== 全局CSS变量 ===== */
         :root {
+            /* 浅蓝主题（默认） */
             --bg-gradient-start: #d4e6f1;
             --bg-gradient-end: #b0d0e8;
             --card-bg: rgba(255, 255, 255, 0.75);
@@ -231,7 +237,7 @@
             margin-bottom: 2rem;
         }
 
-        /* ===== 标题系列（调小字号） ===== */
+        /* ===== 标题系列 ===== */
         h1, h2, h3, h4, h5, h6 {
             font-weight: 400;
             color: var(--title-color);
@@ -474,7 +480,7 @@
         })();
     </script>
 
-    <!-- 生成目录的 JavaScript（改进版，增加调试输出） -->
+    <!-- 生成目录的 JavaScript（仅生成 id 和列表，不拦截点击） -->
     <script>
         (function() {
             function generateToc() {
@@ -487,6 +493,7 @@
                     return;
                 }
 
+                // 为每个标题生成唯一 id
                 headings.forEach((heading, index) => {
                     if (!heading.id) {
                         let text = heading.textContent || '';
@@ -507,6 +514,7 @@
                     }
                 });
 
+                // 构建目录 HTML（使用原生 <a href="#id">）
                 let html = '';
                 headings.forEach(heading => {
                     const tag = heading.tagName.toLowerCase();
@@ -516,22 +524,6 @@
                     html += `<li class="${levelClass}"><a href="#${id}">${text}</a></li>`;
                 });
                 tocList.innerHTML = html;
-
-                tocList.addEventListener('click', (e) => {
-                    const target = e.target.closest('a');
-                    if (target && target.hash && target.hash.length > 1) {
-                        e.preventDefault();
-                        const id = target.hash.slice(1);
-                        console.log(`Attempting to scroll to element with id: ${id}`);
-                        const element = document.getElementById(id);
-                        if (element) {
-                            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                            history.pushState(null, null, target.hash);
-                        } else {
-                            console.warn('未找到元素: #' + id);
-                        }
-                    }
-                });
             }
 
             if (document.readyState === 'loading') {
