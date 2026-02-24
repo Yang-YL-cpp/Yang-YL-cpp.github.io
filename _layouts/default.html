@@ -10,13 +10,10 @@
     
     <style>
         /* 全局平滑滚动 */
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; }
 
         /* ===== 全局CSS变量 ===== */
         :root {
-            /* 浅蓝主题（默认） */
             --bg-gradient-start: #d4e6f1;
             --bg-gradient-end: #b0d0e8;
             --card-bg: rgba(255, 255, 255, 0.75);
@@ -38,7 +35,6 @@
             --toc-hover-bg: rgba(90, 160, 210, 0.1);
         }
 
-        /* 深蓝主题 */
         body[data-theme="dark"] {
             --bg-gradient-start: #0b1a2e;
             --bg-gradient-end: #0b1a2e;
@@ -61,7 +57,6 @@
             --toc-hover-bg: rgba(200, 220, 255, 0.1);
         }
 
-        /* ===== 基础样式 ===== */
         body {
             margin: 0;
             padding: 3rem 1.5rem;
@@ -77,11 +72,8 @@
             position: relative;
         }
 
-        /* 大屏幕时左侧留出目录空间 */
         @media (min-width: 1400px) {
-            body {
-                padding-left: 280px;
-            }
+            body { padding-left: 280px; }
         }
 
         /* ===== 左侧目录容器 ===== */
@@ -105,9 +97,7 @@
             transition: background 0.3s ease, border-color 0.3s ease;
             z-index: 900;
         }
-        #toc-container::-webkit-scrollbar {
-            display: none;
-        }
+        #toc-container::-webkit-scrollbar { display: none; }
 
         #toc-container h3 {
             margin-top: 0;
@@ -126,10 +116,7 @@
             margin: 0 0 1rem 0;
         }
 
-        #toc-list li {
-            margin: 0.2rem 0;
-            line-height: 1.4;
-        }
+        #toc-list li { margin: 0.2rem 0; line-height: 1.4; }
 
         .toc-h1 { 
             margin-left: 0; 
@@ -161,13 +148,11 @@
             border-radius: 4px;
             transition: background 0.2s ease, color 0.2s ease;
         }
-
         #toc-list a:hover {
             background: var(--toc-hover-bg);
             color: var(--link-hover);
         }
 
-        /* 返回主页按钮样式 */
         .home-button {
             display: block;
             text-align: center;
@@ -185,14 +170,11 @@
             color: var(--link-hover);
         }
 
-        /* 窄屏隐藏目录 */
         @media (max-width: 1399px) {
-            #toc-container {
-                display: none;
-            }
+            #toc-container { display: none; }
         }
 
-        /* ===== 右上角按钮组（主题 + GitHub） ===== */
+        /* ===== 右上角按钮组 ===== */
         .top-right-buttons {
             position: fixed;
             top: 24px;
@@ -202,7 +184,6 @@
             gap: 12px;
         }
 
-        /* 通用按钮样式 */
         .icon-btn {
             background: rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(8px);
@@ -221,7 +202,6 @@
             font-size: 1.8rem;
             text-decoration: none;
         }
-
         .icon-btn:hover {
             transform: scale(1.1);
             background: rgba(255, 255, 255, 0.3);
@@ -242,24 +222,10 @@
             color: var(--title-color);
         }
 
-        .icon-light, .icon-dark {
-            display: inline-block;
-        }
+        .icon-light, .icon-dark { display: inline-block; }
         body[data-theme="light"] .icon-dark { display: none; }
         body[data-theme="dark"] .icon-light { display: none; }
 
-        /* GitHub 图标专用 */
-        .github-icon {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(8px);
-            border-radius: 50%;
-            width: 48px;
-            height: 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.2s ease, transform 0.2s ease;
-        }
         .github-icon svg {
             width: 28px;
             height: 28px;
@@ -405,7 +371,6 @@
         }
         img { max-width: 100%; height: auto; border-radius: 12px; }
 
-        /* ===== 页脚 ===== */
         .footer {
             text-align: center;
             color: var(--footer-color);
@@ -422,13 +387,11 @@
     <div id="toc-container">
         <h3>📖 目录</h3>
         <ul id="toc-list"></ul>
-        <!-- 返回主页按钮 -->
         <a id="home-button" class="home-button" href="#">🏠 返回主页</a>
     </div>
 
-    <!-- 右上角按钮组：主题切换 + GitHub -->
+    <!-- 右上角按钮组：GitHub + 主题切换 -->
     <div class="top-right-buttons">
-        <!-- GitHub 图标链接到个人主页 -->
         <a href="https://github.com/Yang-YL-cpp" target="_blank" rel="noopener" class="icon-btn" aria-label="GitHub 主页">
             <span class="github-icon">
                 <svg viewBox="0 0 16 16" width="28" height="28" fill="currentColor">
@@ -436,8 +399,6 @@
                 </svg>
             </span>
         </a>
-
-        <!-- 原有的主题切换按钮 -->
         <div class="icon-theme-wrapper icon-btn">
             <button id="icon-theme-toggle" class="icon-theme-btn" aria-label="切换主题">
                 <span class="icon-light">☀️</span>
@@ -451,6 +412,27 @@
         {{ content }}
     </div>
 
+    <!-- Giscus 评论（仅文章页面显示） -->
+    {% unless page.path == "index.html" or page.path == "blogs/index.html" %}
+    <div class="giscus-container" style="width:80%; max-width:1200px; margin-top:2rem;">
+        <script src="https://giscus.app/client.js"
+                data-repo="Yang-YL-cpp/Yang-YL-cpp.github.io"
+                data-repo-id="你的仓库ID"  <!-- 从 giscus.app 获取 -->
+                data-category="你的分类名"
+                data-category-id="你的分类ID"
+                data-mapping="pathname"
+                data-strict="0"
+                data-reactions-enabled="1"
+                data-emit-metadata="0"
+                data-input-position="bottom"
+                data-theme="preferred_color_scheme"
+                data-lang="zh-CN"
+                crossorigin="anonymous"
+                async>
+        </script>
+    </div>
+    {% endunless %}
+
     <!-- 页脚 -->
     <div class="footer">© 2026 Yang_YL · 由 GitHub Pages 驱动</div>
 
@@ -458,7 +440,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
 
-    <!-- 主题切换基础脚本 -->
+    <!-- 主题切换脚本 -->
     <script>
         (function() {
             const body = document.body;
@@ -501,7 +483,7 @@
         })();
     </script>
 
-    <!-- highlight.js 核心库（代码高亮） -->
+    <!-- highlight.js 核心库 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/cpp.min.js"></script>
 
@@ -598,28 +580,24 @@
                 if (!homeButton) return;
 
                 let path = window.location.pathname;
-
                 if (path === '/' || path === '/index.html') {
                     homeButton.href = '/';
                     return;
                 }
-
                 if (path.endsWith('/')) {
                     let trimmed = path.slice(0, -1);
                     let lastSlashIndex = trimmed.lastIndexOf('/');
                     if (lastSlashIndex <= 0) {
                         homeButton.href = '/';
                     } else {
-                        let parentPath = trimmed.substring(0, lastSlashIndex + 1);
-                        homeButton.href = parentPath;
+                        homeButton.href = trimmed.substring(0, lastSlashIndex + 1);
                     }
                 } else {
                     let lastSlashIndex = path.lastIndexOf('/');
                     if (lastSlashIndex <= 0) {
                         homeButton.href = '/';
                     } else {
-                        let dirPath = path.substring(0, lastSlashIndex + 1);
-                        homeButton.href = dirPath;
+                        homeButton.href = path.substring(0, lastSlashIndex + 1);
                     }
                 }
             }
