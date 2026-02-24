@@ -201,10 +201,18 @@
             color: var(--title-color);
             font-size: 1.8rem;
             text-decoration: none;
+            overflow: hidden;
         }
         .icon-btn:hover {
             transform: scale(1.1);
             background: rgba(255, 255, 255, 0.3);
+        }
+
+        .github-avatar {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
         }
 
         .icon-theme-btn {
@@ -225,16 +233,6 @@
         .icon-light, .icon-dark { display: inline-block; }
         body[data-theme="light"] .icon-dark { display: none; }
         body[data-theme="dark"] .icon-light { display: none; }
-
-        .github-icon svg {
-            width: 28px;
-            height: 28px;
-            fill: var(--title-color);
-            transition: fill 0.2s ease;
-        }
-        .github-icon:hover svg {
-            fill: var(--link-hover);
-        }
 
         /* ===== 主卡片样式 ===== */
         .card {
@@ -390,14 +388,10 @@
         <a id="home-button" class="home-button" href="#">🏠 返回主页</a>
     </div>
 
-    <!-- 右上角按钮组：GitHub + 主题切换 -->
+    <!-- 右上角按钮组：GitHub 头像 + 主题切换 -->
     <div class="top-right-buttons">
         <a href="https://github.com/Yang-YL-cpp" target="_blank" rel="noopener" class="icon-btn" aria-label="GitHub 主页">
-            <span class="github-icon">
-                <svg viewBox="0 0 16 16" width="28" height="28" fill="currentColor">
-                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-                </svg>
-            </span>
+            <img src="https://github.com/Yang-YL-cpp.png" alt="GitHub 头像" class="github-avatar">
         </a>
         <div class="icon-theme-wrapper icon-btn">
             <button id="icon-theme-toggle" class="icon-theme-btn" aria-label="切换主题">
@@ -412,21 +406,22 @@
         {{ content }}
     </div>
 
-    <!-- Giscus 评论（仅文章页面显示） -->
+    <!-- Giscus 评论（仅文章页面显示，排除主页和博客列表页） -->
     {% unless page.path == "index.html" or page.path == "blogs/index.html" %}
-    <div class="giscus-container" style="width:80%; max-width:1200px; margin-top:2rem;">
+    <div class="giscus-container" style="width:80%; max-width:1200px; margin:2rem auto;">
         <script src="https://giscus.app/client.js"
                 data-repo="Yang-YL-cpp/Yang-YL-cpp.github.io"
-                data-repo-id="你的仓库ID"  <!-- 从 giscus.app 获取 -->
-                data-category="你的分类名"
-                data-category-id="你的分类ID"
+                data-repo-id="R_kgDORWYeqw"
+                data-category="Announcements"
+                data-category-id="DIC_kwDORWYeq84C3G66"
                 data-mapping="pathname"
-                data-strict="0"
+                data-strict="1"
                 data-reactions-enabled="1"
                 data-emit-metadata="0"
-                data-input-position="bottom"
+                data-input-position="top"
                 data-theme="preferred_color_scheme"
                 data-lang="zh-CN"
+                data-loading="lazy"
                 crossorigin="anonymous"
                 async>
         </script>
