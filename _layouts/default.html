@@ -407,7 +407,6 @@
     </div>
 
     <!-- Giscus 评论（仅文章页面显示，排除主页和博客列表页） -->
-    {% unless page.path == "index.html" or page.path == "blogs/index.html" %}
     <div class="giscus-container" style="width:80%; max-width:1200px; margin:2rem auto;">
         <script src="https://giscus.app/client.js"
                 data-repo="Yang-YL-cpp/Yang-YL-cpp.github.io"
@@ -426,7 +425,6 @@
                 async>
         </script>
     </div>
-    {% endunless %}
 
     <!-- 页脚 -->
     <div class="footer">© 2026 Yang_YL · 由 GitHub Pages 驱动</div>
