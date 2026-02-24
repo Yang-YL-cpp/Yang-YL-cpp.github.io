@@ -396,17 +396,17 @@
         <a id="home-button" class="home-button" href="#">🏠 返回主页</a>
     </div>
 
-    <!-- 右上角按钮组：GitHub 头像 + 主题切换 -->
+    <!-- 右上角按钮组：主题切换 + GitHub 头像（顺序交换后） -->
     <div class="top-right-buttons">
-        <a href="https://github.com/Yang-YL-cpp" target="_blank" rel="noopener" class="icon-btn" aria-label="GitHub 主页">
-            <img src="https://github.com/Yang-YL-cpp.png" alt="GitHub 头像" class="github-avatar">
-        </a>
         <div class="icon-theme-wrapper icon-btn">
             <button id="icon-theme-toggle" class="icon-theme-btn" aria-label="切换主题">
                 <span class="icon-light">☀️</span>
                 <span class="icon-dark">🌙</span>
             </button>
         </div>
+        <a href="https://github.com/Yang-YL-cpp" target="_blank" rel="noopener" class="icon-btn" aria-label="GitHub 主页">
+            <img src="https://github.com/Yang-YL-cpp.png" alt="GitHub 头像" class="github-avatar">
+        </a>
     </div>
 
     <!-- 主内容卡片 -->
@@ -426,7 +426,7 @@
                 data-reactions-enabled="1"
                 data-emit-metadata="0"
                 data-input-position="bottom"
-                data-theme="preferred_color_scheme"
+                data-theme="light"  <!-- 初始主题，后续会动态更新 -->
                 data-lang="zh-CN"
                 data-loading="lazy"
                 crossorigin="anonymous"
@@ -441,19 +441,41 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
 
-    <!-- 主题切换脚本 -->
+    <!-- 主题切换脚本（包含 Giscus 主题同步） -->
     <script>
         (function() {
             const body = document.body;
             const toggleBtn = document.getElementById('icon-theme-toggle');
             const savedTheme = localStorage.getItem('yang-yl-theme') || 'light';
             body.setAttribute('data-theme', savedTheme);
+
+            // 获取 Giscus iframe 并设置主题的函数
+            function setGiscusTheme(theme) {
+                const iframe = document.querySelector('iframe.giscus-frame');
+                if (iframe) {
+                    iframe.contentWindow.postMessage({
+                        giscus: {
+                            setConfig: {
+                                theme: theme === 'dark' ? 'dark' : 'light'
+                            }
+                        }
+                    }, 'https://giscus.app');
+                } else {
+                    // 如果 iframe 还没加载，稍后重试
+                    setTimeout(() => setGiscusTheme(theme), 200);
+                }
+            }
+
+            // 初始设置 Giscus 主题
+            setGiscusTheme(savedTheme);
+
             toggleBtn.addEventListener('click', () => {
                 const currentTheme = body.getAttribute('data-theme');
                 const newTheme = currentTheme === 'light' ? 'dark' : 'light';
                 body.setAttribute('data-theme', newTheme);
                 localStorage.setItem('yang-yl-theme', newTheme);
                 if (window.updateHighlightTheme) updateHighlightTheme(newTheme);
+                setGiscusTheme(newTheme);
             });
         })();
     </script>
@@ -591,7 +613,6 @@
                     if (activeLink) {
                         removeActive();
                         activeLink.classList.add('active');
-                        // 初始滚动到该目录项
                         setTimeout(() => {
                             activeLink.scrollIntoView({ block: 'nearest', behavior: 'auto' });
                         }, 100);
@@ -600,7 +621,6 @@
 
                 let lastActiveLink = null;
 
-                // 使目录项可见（如果不在可视区内）
                 function ensureVisible(link) {
                     if (!link) return;
                     const containerRect = tocContainer.getBoundingClientRect();
@@ -610,10 +630,8 @@
                     const containerHeight = containerRect.height;
 
                     if (linkTop < 0) {
-                        // 在上方不可见
-                        tocContainer.scrollTop += linkTop - 10; // 留点边距
+                        tocContainer.scrollTop += linkTop - 10;
                     } else if (linkBottom > containerHeight) {
-                        // 在下方不可见
                         tocContainer.scrollTop += linkBottom - containerHeight + 10;
                     }
                 }
