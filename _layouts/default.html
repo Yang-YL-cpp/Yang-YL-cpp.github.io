@@ -398,14 +398,12 @@
 
     <!-- 右上角按钮组：主题切换 + GitHub 头像（顺序已交换） -->
     <div class="top-right-buttons">
-        <!-- 主题切换按钮 -->
         <div class="icon-theme-wrapper icon-btn">
             <button id="icon-theme-toggle" class="icon-theme-btn" aria-label="切换主题">
                 <span class="icon-light">☀️</span>
                 <span class="icon-dark">🌙</span>
             </button>
         </div>
-        <!-- GitHub 头像 -->
         <a href="https://github.com/Yang-YL-cpp" target="_blank" rel="noopener" class="icon-btn" aria-label="GitHub 主页">
             <img src="https://github.com/Yang-YL-cpp.png" alt="GitHub 头像" class="github-avatar">
         </a>
@@ -416,10 +414,8 @@
         {{ content }}
     </div>
 
-    <!-- Giscus 评论容器（仅文章页面显示，排除主页和博客列表页） -->
-    <div id="giscus-wrap" style="width:80%; max-width:1200px; margin:2rem auto;">
-        <!-- 这里会动态插入 Giscus 脚本 -->
-    </div>
+    <!-- Giscus 评论容器（仅文章页面显示，动态加载） -->
+    <div id="giscus-wrap" style="width:80%; max-width:1200px; margin:2rem auto;"></div>
 
     <!-- 页脚 -->
     <div class="footer">© 2026 Yang_YL · 由 GitHub Pages 驱动</div>
@@ -436,24 +432,15 @@
             const savedTheme = localStorage.getItem('yang-yl-theme') || 'light';
             body.setAttribute('data-theme', savedTheme);
 
-            // 加载 Giscus（根据当前主题）
             function loadGiscus(theme) {
                 const wrap = document.getElementById('giscus-wrap');
                 if (!wrap) return;
-
-                // 如果当前页面不是文章页（根据 path 判断），则不加载 Giscus
-                // 注意：我们之前在布局中移除了条件判断，但这里可以加一个简单的判断，避免非文章页加载
-                // 简单判断：如果路径包含 /blogs/ 且不是 /blogs/ 本身（即不是博客列表页），才加载
                 const path = window.location.pathname;
                 if (!path.includes('/blogs/') || path === '/blogs/' || path === '/blogs/index.html') {
-                    wrap.innerHTML = ''; // 清空，确保不显示
+                    wrap.innerHTML = '';
                     return;
                 }
-
-                // 清空容器
                 wrap.innerHTML = '';
-
-                // 创建新的 script 标签
                 const script = document.createElement('script');
                 script.src = 'https://giscus.app/client.js';
                 script.setAttribute('data-repo', 'Yang-YL-cpp/Yang-YL-cpp.github.io');
@@ -465,27 +452,22 @@
                 script.setAttribute('data-reactions-enabled', '1');
                 script.setAttribute('data-emit-metadata', '0');
                 script.setAttribute('data-input-position', 'bottom');
-                // 根据当前主题设置 data-theme
                 script.setAttribute('data-theme', theme === 'dark' ? 'dark' : 'light');
                 script.setAttribute('data-lang', 'zh-CN');
                 script.setAttribute('data-loading', 'lazy');
                 script.setAttribute('crossorigin', 'anonymous');
                 script.async = true;
-
                 wrap.appendChild(script);
             }
 
-            // 初始加载 Giscus
             loadGiscus(savedTheme);
 
-            // 主题切换事件
             toggleBtn.addEventListener('click', () => {
                 const currentTheme = body.getAttribute('data-theme');
                 const newTheme = currentTheme === 'light' ? 'dark' : 'light';
                 body.setAttribute('data-theme', newTheme);
                 localStorage.setItem('yang-yl-theme', newTheme);
                 if (window.updateHighlightTheme) updateHighlightTheme(newTheme);
-                // 重新加载 Giscus 以切换主题
                 loadGiscus(newTheme);
             });
         })();
@@ -557,7 +539,7 @@
         })();
     </script>
 
-    <!-- 生成目录的 JavaScript（包含高亮自动滚动） -->
+    <!-- 生成目录的 JavaScript（跳过内容为“目录”的标题） -->
     <script>
         (function() {
             window.tocObserver = null;
@@ -572,6 +554,7 @@
                     return;
                 }
 
+                // 先为每个标题生成 id
                 headings.forEach((heading, index) => {
                     if (!heading.id) {
                         let text = heading.textContent || '';
@@ -589,14 +572,21 @@
                     }
                 });
 
+                // 构建目录 HTML，跳过内容为“目录”的标题
                 let html = '';
                 headings.forEach(heading => {
+                    const text = heading.textContent.trim();
+                    if (text === '目录') return; // 跳过“目录”标题
+
                     const tag = heading.tagName.toLowerCase();
                     const levelClass = `toc-${tag}`;
-                    const text = heading.textContent || '';
                     const id = heading.id;
                     html += `<li class="${levelClass}"><a href="#${id}">${text}</a></li>`;
                 });
+
+                if (html === '') {
+                    html = '<li style="color: var(--footer-color);">无标题</li>';
+                }
                 tocList.innerHTML = html;
 
                 initActiveToc();
@@ -665,7 +655,12 @@
                     threshold: 0.5
                 });
 
-                headings.forEach(heading => window.tocObserver.observe(heading));
+                headings.forEach(heading => {
+                    // 只观察未被跳过的标题（内容不是“目录”）
+                    if (heading.textContent.trim() !== '目录') {
+                        window.tocObserver.observe(heading);
+                    }
+                });
             }
 
             if (document.readyState === 'loading') {
