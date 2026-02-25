@@ -404,8 +404,9 @@
                 <span class="icon-dark">🌙</span>
             </button>
         </div>
+        <!-- GitHub 头像，加载失败时显示 Octocat 猫猫 -->
         <a href="https://github.com/Yang-YL-cpp" target="_blank" rel="noopener" class="icon-btn" aria-label="GitHub 主页">
-            <img src="https://github.com/Yang-YL-cpp.png" alt="GitHub 头像" class="github-avatar">
+            <img src="https://github.com/Yang-YL-cpp.png" alt="GitHub 头像" class="github-avatar" onerror="this.onerror=null; this.src='https://github.githubassets.com/images/modules/logos_page/Octocat.png';">
         </a>
     </div>
 
@@ -554,7 +555,6 @@
                     return;
                 }
 
-                // 先为每个标题生成 id
                 headings.forEach((heading, index) => {
                     if (!heading.id) {
                         let text = heading.textContent || '';
@@ -572,11 +572,10 @@
                     }
                 });
 
-                // 构建目录 HTML，跳过内容为“目录”的标题
                 let html = '';
                 headings.forEach(heading => {
                     const text = heading.textContent.trim();
-                    if (text === '目录') return; // 跳过“目录”标题
+                    if (text === '目录') return;
 
                     const tag = heading.tagName.toLowerCase();
                     const levelClass = `toc-${tag}`;
@@ -607,7 +606,6 @@
                     tocLinks.forEach(link => link.classList.remove('active'));
                 }
 
-                // 根据 hash 初始高亮
                 if (window.location.hash) {
                     const id = window.location.hash.slice(1);
                     const activeLink = document.querySelector(`#toc-list a[href="#${id}"]`);
@@ -656,7 +654,6 @@
                 });
 
                 headings.forEach(heading => {
-                    // 只观察未被跳过的标题（内容不是“目录”）
                     if (heading.textContent.trim() !== '目录') {
                         window.tocObserver.observe(heading);
                     }
