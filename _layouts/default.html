@@ -377,6 +377,31 @@
         }
         img { max-width: 100%; height: auto; border-radius: 12px; }
 
+        /* ===== GitHub Star 按钮样式 ===== */
+        .star-button {
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            background: var(--accent-bg);
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--title-border);
+            border-radius: 40px;
+            color: var(--title-color);
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.2s ease, transform 0.2s ease;
+            margin: 2rem auto 0;
+            text-align: center;
+        }
+        .star-button:hover {
+            background: var(--toc-hover-bg);
+            transform: scale(1.02);
+            color: var(--link-hover);
+        }
+        .star-button i {
+            margin-right: 0.5rem;
+        }
+
         .footer {
             text-align: center;
             color: var(--footer-color);
@@ -384,7 +409,7 @@
             transition: color 0.3s ease;
             width: 80%;
             max-width: 1200px;
-            margin-top: 0;
+            margin-top: 2rem;
         }
     </style>
 </head>
@@ -396,7 +421,7 @@
         <a id="home-button" class="home-button" href="#">🏠 返回主页</a>
     </div>
 
-    <!-- 右上角按钮组：主题切换 + GitHub 头像（顺序已交换） -->
+    <!-- 右上角按钮组：主题切换 + 固定的 GitHub 猫（指向仓库） -->
     <div class="top-right-buttons">
         <div class="icon-theme-wrapper icon-btn">
             <button id="icon-theme-toggle" class="icon-theme-btn" aria-label="切换主题">
@@ -404,17 +429,13 @@
                 <span class="icon-dark">🌙</span>
             </button>
         </div>
-        <!-- GitHub 头像，加载失败时显示 Octocat 猫猫 -->
-<a href="https://github.com/Yang-YL-cpp" target="_blank" rel="noopener" class="icon-btn" aria-label="GitHub 主页">
-    <img src="https://github.com/Yang-YL-cpp.png"
-         alt="GitHub 头像"
-         class="github-avatar"
-         onerror="this.onerror=null; this.src='https://cdn.luogu.com.cn/upload/image_hosting/fv6a57aw.png'; 
-                  this.onerror=function() { 
-                      var parent = this.parentElement;
-                      if (parent) parent.style.display = 'none';
-                  }">
-</a>
+        <!-- 固定显示洛谷图床的 GitHub 猫，加载失败则隐藏整个按钮 -->
+        <a href="https://github.com/Yang-YL-cpp/Yang-YL-cpp.github.io" target="_blank" rel="noopener" class="icon-btn" aria-label="GitHub 仓库">
+            <img src="https://cdn.luogu.com.cn/upload/image_hosting/fv6a57aw.png"
+                 alt="GitHub 猫"
+                 class="github-avatar"
+                 onerror="this.parentElement.style.display='none';">
+        </a>
     </div>
 
     <!-- 主内容卡片 -->
@@ -424,6 +445,13 @@
 
     <!-- Giscus 评论容器（仅文章页面显示，动态加载） -->
     <div id="giscus-wrap" style="width:80%; max-width:1200px; margin:2rem auto;"></div>
+
+    <!-- GitHub Star 按钮（位于评论框上方，页脚之前） -->
+    <div style="text-align: center; width:80%; max-width:1200px; margin: 0 auto;">
+        <a href="https://github.com/Yang-YL-cpp/Yang-YL-cpp.github.io" target="_blank" rel="noopener" class="star-button">
+            <i>⭐</i> Star on GitHub
+        </a>
+    </div>
 
     <!-- 页脚 -->
     <div class="footer">© 2026 Yang_YL · 由 GitHub Pages 驱动</div>
