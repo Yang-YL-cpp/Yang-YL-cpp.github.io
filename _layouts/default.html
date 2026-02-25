@@ -405,9 +405,16 @@
             </button>
         </div>
         <!-- GitHub 头像，加载失败时显示 Octocat 猫猫 -->
-        <a href="https://github.com/Yang-YL-cpp" target="_blank" rel="noopener" class="icon-btn" aria-label="GitHub 主页">
-            <img src="https://github.com/Yang-YL-cpp.png" alt="GitHub 头像" class="github-avatar" onerror="this.onerror=null; this.src='https://github.githubassets.com/images/modules/logos_page/Octocat.png';">
-        </a>
+<a href="https://github.com/Yang-YL-cpp" target="_blank" rel="noopener" class="icon-btn" aria-label="GitHub 主页">
+    <img src="https://github.com/Yang-YL-cpp.png"
+         alt="GitHub 头像"
+         class="github-avatar"
+         onerror="this.onerror=null; this.src='https://cdn.luogu.com.cn/upload/image_hosting/fv6a57aw.png'; 
+                  this.onerror=function() { 
+                      var parent = this.parentElement;
+                      if (parent) parent.style.display = 'none';
+                  }">
+</a>
     </div>
 
     <!-- 主内容卡片 -->
