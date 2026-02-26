@@ -283,6 +283,18 @@
         h5 { font-size: 1.1rem; font-weight: 500; }
         h6 { font-size: 1rem; font-weight: 500; color: var(--footer-color); }
 
+        /* 新增：标题编号样式 */
+        .heading-number {
+            color: var(--accent-text);
+            font-weight: 600;
+            margin-right: 0.5em;
+        }
+
+        /* 新增：整行加粗居中 */
+        .p-bold-centered {
+            text-align: center;
+        }
+
         /* ===== 段落和内联文本 ===== */
         p {
             font-size: 1.2rem;
@@ -445,7 +457,7 @@
 
     <!-- Giscus 评论容器（仅文章页面显示，动态加载） -->
     <div id="giscus-wrap" style="width:80%; max-width:1200px; margin:2rem auto;"></div>
-    
+
     <!-- GitHub Star 按钮（位于评论框上方，页脚之前） -->
     <div style="text-align: center; width:80%; max-width:1200px; margin: 0 auto;">
         <a href="https://github.com/Yang-YL-cpp/Yang-YL-cpp.github.io" 
@@ -742,6 +754,63 @@
                 setHomeButtonHref();
             }
         })();
+    </script>
+
+    <!-- 新增功能：标题自动编号 + 整行加粗居中 -->
+    <script>
+    // 标题自动编号
+    (function() {
+        if (window.headingNumberingDone) return;
+        window.headingNumberingDone = true;
+
+        const headings = document.querySelectorAll('h1, h2, h3, h4, h5');
+        if (headings.length === 0) return;
+
+        let counters = [0, 0, 0, 0, 0];
+        let lastLevel = -1;
+
+        headings.forEach(heading => {
+            const tag = heading.tagName.toLowerCase();
+            let level;
+            if (tag === 'h1') level = 0;
+            else if (tag === 'h2') level = 1;
+            else if (tag === 'h3') level = 2;
+            else if (tag === 'h4') level = 3;
+            else if (tag === 'h5') level = 4;
+            else return;
+
+            if (level < lastLevel) {
+                for (let i = level + 1; i < counters.length; i++) counters[i] = 0;
+            }
+
+            counters[level]++;
+
+            let numberStr = '';
+            for (let i = 0; i <= level; i++) {
+                if (i > 0) numberStr += '.';
+                numberStr += counters[i];
+            }
+
+            const numberSpan = document.createElement('span');
+            numberSpan.className = 'heading-number';
+            numberSpan.textContent = numberStr + ' ';
+            heading.insertBefore(numberSpan, heading.firstChild);
+
+            lastLevel = level;
+        });
+    })();
+
+    // 整行加粗居中
+    (function() {
+        const paragraphs = document.querySelectorAll('p');
+        paragraphs.forEach(p => {
+            const html = p.innerHTML.trim();
+            // 匹配整个段落只包含一个加粗标签（允许前后空白）
+            if (/^\s*<(?:strong|b)>(.*?)<\/(?:strong|b)>\s*$/.test(html)) {
+                p.classList.add('p-bold-centered');
+            }
+        });
+    })();
     </script>
 </body>
 </html>
