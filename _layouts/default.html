@@ -283,14 +283,14 @@
         h5 { font-size: 1.1rem; font-weight: 500; }
         h6 { font-size: 1rem; font-weight: 500; color: var(--footer-color); }
 
-        /* 新增：标题编号样式 */
+        /* 标题编号样式 */
         .heading-number {
             color: var(--accent-text);
             font-weight: 600;
             margin-right: 0.5em;
         }
 
-        /* 新增：整行加粗居中 */
+        /* 整行加粗居中 */
         .p-bold-centered {
             text-align: center;
         }
@@ -455,7 +455,7 @@
         {{ content }}
     </div>
 
-    <!-- Giscus 评论容器（仅文章页面显示，动态加载） -->
+    <!-- Giscus 评论容器（所有页面显示，异步加载） -->
     <div id="giscus-wrap" style="width:80%; max-width:1200px; margin:2rem auto;"></div>
 
     <!-- GitHub Star 按钮（位于评论框上方，页脚之前） -->
@@ -475,7 +475,7 @@
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js" integrity="sha384-hIoBPJpTUs74ddyc4bFZSM1TVlQDA60VBbJS0oA934VSz82sBx1X7kSx2ATBDIyd" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js" integrity="sha384-43gviWU0YVjaDtb/GhzOouOXtZMP/7XUzwPTstBeZFe/+rCMvRwr4yROQP43s0Xk" crossorigin="anonymous"></script>
 
-    <!-- 主题切换脚本（增强版：同时切换 Giscus 主题） -->
+    <!-- 主题切换脚本（优化版：同时向 Giscus iframe 发送主题切换消息，无需重载） -->
     <script>
         (function() {
             const body = document.body;
@@ -483,15 +483,13 @@
             const savedTheme = localStorage.getItem('yang-yl-theme') || 'light';
             body.setAttribute('data-theme', savedTheme);
 
+            // 加载 Giscus（异步并行，不阻塞渲染）
             function loadGiscus(theme) {
                 const wrap = document.getElementById('giscus-wrap');
                 if (!wrap) return;
-                const path = window.location.pathname;
-                if (!path.includes('/blogs/') || path === '/blogs/' || path === '/blogs/index.html') {
-                    wrap.innerHTML = '';
-                    return;
-                }
-                wrap.innerHTML = '';
+                // 如果已经存在 iframe，则不重复加载（初次加载）
+                if (wrap.querySelector('iframe')) return;
+
                 const script = document.createElement('script');
                 script.src = 'https://giscus.app/client.js';
                 script.setAttribute('data-repo', 'Yang-YL-cpp/Yang-YL-cpp.github.io');
@@ -511,7 +509,22 @@
                 wrap.appendChild(script);
             }
 
+            // 初次加载 Giscus
             loadGiscus(savedTheme);
+
+            // 主题切换时，发送消息给 Giscus iframe 切换主题，无需重载
+            function sendGiscusTheme(theme) {
+                const iframe = document.querySelector('iframe.giscus-frame');
+                if (iframe) {
+                    iframe.contentWindow.postMessage({
+                        giscus: {
+                            setConfig: {
+                                theme: theme === 'dark' ? 'dark' : 'light'
+                            }
+                        }
+                    }, 'https://giscus.app');
+                }
+            }
 
             toggleBtn.addEventListener('click', () => {
                 const currentTheme = body.getAttribute('data-theme');
@@ -519,7 +532,8 @@
                 body.setAttribute('data-theme', newTheme);
                 localStorage.setItem('yang-yl-theme', newTheme);
                 if (window.updateHighlightTheme) updateHighlightTheme(newTheme);
-                loadGiscus(newTheme);
+                // 向 Giscus 发送主题切换消息
+                sendGiscusTheme(newTheme);
             });
         })();
     </script>
@@ -756,7 +770,7 @@
         })();
     </script>
 
-    <!-- 新增功能：标题自动编号 + 整行加粗居中 -->
+    <!-- 标题自动编号 + 整行加粗居中 -->
     <script>
     // 标题自动编号
     (function() {
@@ -805,7 +819,6 @@
         const paragraphs = document.querySelectorAll('p');
         paragraphs.forEach(p => {
             const html = p.innerHTML.trim();
-            // 匹配整个段落只包含一个加粗标签（允许前后空白）
             if (/^\s*<(?:strong|b)>(.*?)<\/(?:strong|b)>\s*$/.test(html)) {
                 p.classList.add('p-bold-centered');
             }
