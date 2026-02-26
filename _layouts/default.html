@@ -319,7 +319,7 @@
         /* ===== 代码块基础样式（预留按钮空间） ===== */
         pre {
             position: relative;
-            padding: 1rem 2.5rem 1rem 1rem; /* 右侧留出按钮空间 */
+            padding: 1rem 2.8rem 1rem 1rem; /* 右侧留出按钮空间 */
             background: var(--code-bg);
             border-radius: 6px;
             overflow-x: auto;
@@ -333,27 +333,31 @@
             color: var(--code-text);
         }
 
-        /* 代码块复制按钮样式 */
+        /* 代码块复制按钮样式（SVG图标） */
         .copy-btn {
             position: absolute;
             top: 8px;
             right: 8px;
-            background: var(--accent-bg);
-            border: 1px solid var(--title-border);
+            width: 28px;
+            height: 28px;
+            border: none;
             border-radius: 4px;
-            padding: 4px 8px;
-            font-size: 0.75rem;
+            background: transparent;
             cursor: pointer;
-            color: var(--text-color);
-            transition: background 0.2s ease, opacity 0.2s ease;
+            opacity: 0.3;
+            transition: opacity 0.2s ease, background 0.2s ease;
             z-index: 10;
-            opacity: 0.6;
-            line-height: 1;
-            font-family: inherit;
+            padding: 4px;
+            box-sizing: border-box;
         }
         .copy-btn:hover {
+            opacity: 0.8;
             background: var(--toc-hover-bg);
-            opacity: 1;
+        }
+        .copy-btn svg {
+            width: 100%;
+            height: 100%;
+            fill: var(--text-color);
         }
 
         /* ===== 列表、引用、表格等 ===== */
@@ -843,27 +847,24 @@
     })();
     </script>
 
-    <!-- 新增：代码块复制按钮功能 -->
+    <!-- 新增：代码块复制按钮功能（图标版，格式修正） -->
     <script>
     (function() {
-        // 为所有 pre 元素添加复制按钮
         const pres = document.querySelectorAll('pre');
         if (!pres.length) return;
 
-        // 获取当前页面的完整 URL（用于来源）
         const currentUrl = window.location.href;
 
         pres.forEach(pre => {
-            // 避免重复添加
             if (pre.querySelector('.copy-btn')) return;
 
             const btn = document.createElement('button');
             btn.className = 'copy-btn';
-            btn.textContent = '复制';
+            // SVG 复制图标
+            btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>`;
+            btn.title = '复制代码';
 
             btn.addEventListener('click', async () => {
-                // 获取代码块内的纯文本（排除按钮自身）
-                // 注意：pre 内可能包含 <code> 标签，也可能直接是文本
                 let codeText = '';
                 if (pre.querySelector('code')) {
                     codeText = pre.querySelector('code').innerText;
@@ -871,27 +872,30 @@
                     codeText = pre.innerText;
                 }
 
-                // 去除可能因按钮插入而多出的空白（按钮不在 pre 内，所以无需担心）
-                // 拼接署名和来源
-                const footer = `\n\nby Yang_YL\nfrom ${currentUrl}`;
+                // 构建注释块：代码后加一个换行，然后 /* ... */
+                // 注意：代码末尾可能已有换行，这里统一在代码后加一个换行，再开始注释块
+                const footer = `\n/*\nBy Yang_YL\nFrom ${currentUrl}\n*/`;
                 const finalText = codeText + footer;
 
                 try {
                     await navigator.clipboard.writeText(finalText);
-                    btn.textContent = '已复制';
+                    btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>`;
+                    btn.title = '已复制';
                     setTimeout(() => {
-                        btn.textContent = '复制';
+                        btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>`;
+                        btn.title = '复制代码';
                     }, 2000);
                 } catch (err) {
                     console.error('复制失败:', err);
-                    btn.textContent = '失败';
+                    btn.innerHTML = '✗';
+                    btn.title = '复制失败';
                     setTimeout(() => {
-                        btn.textContent = '复制';
+                        btn.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>`;
+                        btn.title = '复制代码';
                     }, 2000);
                 }
             });
 
-            // 将按钮插入到 pre 元素中（作为子元素，绝对定位）
             pre.appendChild(btn);
         });
     })();
